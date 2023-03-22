@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="311.06pt" height="322.32pt" version="1.1" viewBox="0 0 311.06 322.32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <symbol id="glyph0-1" overflow="visible">
+   <path d="m22.109-12.453c0-5.3281-4.4219-9.6562-9.6562-9.6562-5.375 0-9.7188 4.4219-9.7188 9.6562 0 5.2812 4.3438 9.6562 9.7188 9.6562 5.2344 0 9.6562-4.3281 9.6562-9.6562z"/>
+  </symbol>
+ </defs>
+ <path d="m79.703 26.32h-69.738" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1.99"/>
+ <g>
+  <use x="143.073" y="38.634998" width="100%" height="100%" xlink:href="#glyph0-1"/>
+ </g>
+ <g fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1.99">
+  <path d="m155.53 33.102v178.63"/>
+  <path d="m149.44 26.32h-69.734"/>
+  <path d="m231.35 26.32h-69.734"/>
+  <path d="m301.09 26.32h-69.742"/>
+  <path d="m79.703 122.07h-69.738"/>
+  <path d="m79.703 122.07 0.085935 0.06641"/>
+  <path d="m79.703 122.07 75.824 89.664"/>
+  <path d="m155.44 211.67 0.08594 0.0625"/>
+  <path d="m231.35 122.07-75.824 89.664"/>
+  <path d="m301.09 122.07h-69.742"/>
+  <path d="m79.703 301.4h-69.738"/>
+  <path d="m79.703 301.4 75.824-89.664"/>
+  <path d="m231.35 301.4-0.08203-0.0625"/>
+  <path d="m231.35 301.4-75.824-89.664"/>
+  <path d="m155.61 211.8-0.08594-0.06641"/>
+  <path d="m301.09 301.4h-69.742"/>
+ </g>
+</svg>
