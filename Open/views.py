@@ -1,121 +1,15 @@
 from flask import render_template, request, flash, redirect, url_for, session
-from flask_login import login_required, current_user
-from ..models import User, Rat, Comment, Help_material
-from .. import db
 from flask import Markup
 from ..blueprints import views
-from ..log_user_interactions import log_access
-from ..configuration import get_config
 from .simulator import simulator
 from .visualization import CircleNotation, DimensionalCircleNotation
 import numpy as np
 import os
 import ast
 
-configuration = get_config()
-
-
-# ********************************* Open pages views ***************************************************
-@views.route('/', methods=['GET', 'POST'])
-@log_access
-# @login_required
-def home():
-    # return "<h1>KI4TUK</h1>"
-    #return render_template("home.html", user=current_user)
-
-    if current_user.is_authenticated:           #User is logged in
-        if current_user.user_rights == 1:               #User is student
-            return redirect(url_for('views.profile'))
-        elif current_user.user_rights == 2:             #User creates Rats
-            if not current_user.rats:
-               return redirect(url_for('views.rats_category', status='All'))
-            else:
-               return redirect(url_for('views.my_rats'))
-        elif current_user.user_rights == 3:             #User is lecturer
-            return redirect(url_for('views.my_lectures'))
-        elif current_user.user_rights == 4:             #User is admin
-            return redirect(url_for('views.admin'))
-        else:
-            return render_template("home.html", user=current_user)
-    else:                                         #User is not logged in
-        return render_template("home.html", user=current_user)
-
-
-@views.route('/mission')
-@views.route('mission')
-@log_access
-def mission():
-    return render_template("Open/mission.html", user=current_user)
-
-
-@views.route('/project')
-@views.route('project')
-@log_access
-def project():
-    return render_template("Open/project.html", user=current_user)
-
-
-@views.route('/contact')
-@views.route('contact')
-@log_access
-def contact():
-    return render_template("Open/contact.html", user=current_user)
-
-
-@views.route('/impressum')
-@views.route('impressum')
-@log_access
-def impressum():
-    return render_template("Open/impressum.html", user=current_user)
-
-
-@views.route('/verlosung')
-@views.route('verlosung')
-@log_access
-def lottery():
-    return render_template("Open/lottery_information.html", user=current_user)
-
-
-@views.route('/information_window/<info>', methods=['GET'])
-@views.route('information_window/<info>', methods=['GET'])
-@log_access
-@login_required
-def embedded_information_window(info):
-    return render_template("Information/"+info+".html", user=current_user)
-
-@log_access
-@login_required
-def welcome():
-    return render_template("Login/welcome_page.html", user=current_user)
-
-@views.route('/privacy_policy')
-@views.route('privacy_policy')
-@log_access
-def privacy_policy():
-    return render_template("Open/privacy_policy.html", user=current_user)
-
-
-@views.route('/how_to_rats_app')
-@views.route('how_to_rats_app')
-@log_access
-def how_to_rats_app():
-    video_path="/static/videos/How_to_RatsApp.mp4"
-    return render_template("Open/video_page.html", user=current_user, video_path=video_path,
-                           video_title="Wie funktioniert RatsApp?")
-
-
-# @views.route('/motivation')
-# @views.route('motivation')
-@log_access
-def rats_app_motivation():
-    video_path="/static/videos/RatsApp - Be a part.mp4"
-    return render_template("Open/video_page.html", user=current_user, video_path=video_path,
-                           video_title="Wieso RatsApp?")
-
 
 @views.route('/quantuk', methods=['GET', 'POST'])
 @views.route('quantuk', methods=['GET', 'POST'])
-@log_access
 def quantuk_generator():
     read_output = None
     if request.method == "GET":
