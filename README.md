@@ -9,3 +9,5 @@ Flask-Session==0.4.0
 matplotlib==3.3.4
 numpy==1.19.5
 ```
+You can find the html code in the "template" folder, while the "Open" folder includes all python files used for the simulation and backend.
+In the "static" folder are all the images and packages used by the html.
