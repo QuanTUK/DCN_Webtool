@@ -31,7 +31,7 @@ class simulator():
             dtype=complex)  # Rotation about x-axis (Bloch Sphere)
         self._Ry = lambda phi: np.array([[np.cos(phi / 2), -1 * np.sin(phi / 2)], [np.sin(phi / 2), np.cos(phi / 2), ]],
                                         dtype=complex)  # Rotation about y-axis (Bloch Sphere)
-        self._Rz = lambda phi: np.array([[np.exp(-1j * phi / 2), 0], [0, np.exp(-1j * phi / 2)]],
+        self._Rz = lambda phi: np.array([[np.exp(-1j * phi / 2), 0], [0, np.exp(1j * phi / 2)]],
                                         dtype=complex)  # Rotation about z-axis (Bloch Sphere)
 
         if jsonDump is not None:
@@ -83,7 +83,8 @@ class simulator():
         # Check if val can be represented by n_Q_bit Q-bits
         assert (val < 2 ** (self._n - Q_bit + 1))
         i = Q_bit
-        for d in format(val, 'b')[::-1]:
+        bval = np.binary_repr(val, width=self._n)  # width is deprecated since numpy 1.12.0)
+        for d in bval[::-1]:
             self._Q_bits[-i] = self._one if d == '1' else self._zero
             i += 1
         self._register = self._nKron(self._Q_bits)
@@ -102,6 +103,7 @@ class simulator():
         """
         self.write_integer(val, Q_bit)
 
+    # NOTE: remove?
     def write_prop(self, p: float, Q_bit=None):
         """Prepare Q-bit i into given state ((1-p)|0> + p|1>). If no Q-bit is given (Q_bit=None) prepare all Q-bits
         to given state. Attention! This will override the register. Use this only to prepare your Q-bits/register.
@@ -429,7 +431,8 @@ class simulator():
         # SWAP by using CNOT gates
         cn1 = self.cNot(i, j)
         cn2 = self.cNot(j, i)
-        return cn1 @ cn2 @ cn1
+        cn3 = self.cNot(i, j)
+        return cn1 @ cn2 @ cn3
 
     # Methods to generate multi Q-bit operators
     def cHad(self, control_Q_bit: int, not_Q_bit: int) -> np.array:
@@ -543,14 +546,20 @@ class simulator():
         Returns:
             np.array: Matrix representation for used CSWAP gate in comp. basis.
         """
-        # CSWAP by using CCNOT gates TODO: 1 sparen
         c1 = [i]
-        c1.extend(control_Q_bit)
         c2 = [j]
-        c2.extend(control_Q_bit)
-        ccn1 = self.cNot(c1, j)
-        ccn2 = self.cNot(c2, i)
-        return ccn1 @ ccn2 @ ccn1
+        # NOTE: Das geht schöner
+        if type(control_Q_bit) == list:
+            c1.extend(control_Q_bit)
+            c2.extend(control_Q_bit)
+        elif type(control_Q_bit) == int:
+            c1.append(control_Q_bit)
+            c2.append(control_Q_bit)
+            print(c1, c2)
+        ccn1 = self.cNot(c2, i)
+        ccn2 = self.cNot(c1, j)
+        ccn3 = self.cNot(c2, i)
+        return ccn1 @ ccn2 @ ccn3
 
     # Private/hidden methods
     def _getBasisVector(self, i: int) -> np.array:
@@ -574,8 +583,8 @@ class simulator():
             np.array: Result
         """
         result = 1
-        for i in ops_to_kron:
-            result = np.kron(result, i)
+        for i in ops_to_kron[::-1]:
+            result = np.kron(i, result)
         return result
 
     def _operatorInBase(self, operator: np.array, Q_bit=None) -> np.array:
@@ -617,12 +626,18 @@ class simulator():
         control_Q_bit = np.array(control_Q_bit, dtype=int)
         assert (np.all(target_Q_bit != control_Q_bit))
 
-        control0 = np.array([np.identity(2)] * self._n, dtype=complex)
-        control0[-control_Q_bit] = np.array([[1, 0], [0, 0]])  # |0><0| check if |0>, apply I if so
-
         control1 = np.array([np.identity(2)] * self._n, dtype=complex)
         control1[-control_Q_bit] = np.array([[0, 0], [0, 1]])  # |1><1| check if |1>
-        control1[-target_Q_bit] = operator  # apply U if so
-        op = self._nKron(control0) + self._nKron(control1)
+        # print(control1)
+        # NOTE: Test for >3 Qubits!
+        # |0><0| check if |0>, apply I if so
+        # For more than one control need to check |0>_i XOR |0>_j  i xor j <=> not(i and j)
+        I = self._operatorInBase(self._I)  # I for 2*n
+        control0 = I - self._nKron(control1)
+
+        control1[-target_Q_bit] = operator  # apply U if |1><1|
+        control1 = self._nKron(control1)
+
+        op = control0 + control1
         self._register = op @ self._register
         return op

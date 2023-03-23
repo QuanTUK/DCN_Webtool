@@ -23,7 +23,7 @@ class Visualization:
         self._colors = None
         self._widths = None
 
-    def export_base64(self, formatStr):
+    def export_base64(self, formatStr='png'):
         return base64.b64encode(self._export_buffer(formatStr)).decode("ascii")
 
     def export_png(self, fname: str):
@@ -41,16 +41,15 @@ class Visualization:
         return buf.getbuffer()
 
     def _export(self, target, formatStr='png'):
-        if self._fig == None:
-            self.draw()
+        self.draw()  # always redraw
         self._fig.savefig(target, format=formatStr, bbox_inches='tight', pad_inches=0, dpi=300, transparent=True)
 
     def show(self):
         """Show fig
         """
         # NOTE: Assert Gui backend
-        if self._fig == None:
-            self.draw()
+        # TODO: More than one show possible
+        self.draw()  # always redraw
         plt.show()
 
     def draw(self):
@@ -131,7 +130,9 @@ class DimensionalCircleNotation(Visualization):
 
         # Style of circles
         self._colors = {'edge': 'black', 'bg': 'white', 'fill': '#77b6baff', 'phase': 'black', 'cube': '#5a5a5a'}
-        self._widths = {'edge': .5, 'phase': .5, 'cube': .5, 'textsize': 9, 'textwidth': .1}
+        self._widths = {'edge': .5, 'phase': .5, 'cube': .5, 'textsize': 10, 'textwidth': .1}
+        self._arrowStyle = {'width': .03, 'head_width': .3, 'head_length': .5, 'edgecolor': None, 'facecolor': 'black'}
+
         # Placement
         self._c = 5  # circle distance
         self._o = self._c / 2  # offset for 3rd dim qubits
@@ -187,34 +188,34 @@ class DimensionalCircleNotation(Visualization):
         self._drawCircle(0)
 
         # Basisvectors
-        off = 2.5
+        # NOTE: Array/Liste für Positionen -> kwargs
         if self._sim._n == 1:
             self._drawArrows(-1, self._c + 2)
             self._ax.set_xlim([-1.2, 6.2])
             self._ax.set_ylim([3.5, 7.5])
         elif self._sim._n == 2:
-            self._drawArrows(-off, self._c + off)
+            self._drawArrows(-2.5, self._c + 2.5)
             self._ax.set_xlim([-4, 6.2])
             self._ax.set_ylim([-2, 8])
         elif self._sim._n == 3:
             self._ax.set_xlim([-5, 8.7])
             self._ax.set_ylim([-2, 10.2])
-            self._drawArrows(-self._c + self._o * 2 / 3, self._c + off)
+            self._drawArrows(-self._c + self._o * 2 / 3, self._c + 2.5)
 
     def _drawArrows(self, x0, y0):
-        alen = self._c * 2 / 3
+        alen = self._c * 2 / 3  # NOTE: -> kwargs
         if self._sim._n > 2:
             di = alen / np.sqrt(2)
             self._ax.text(x0 + di / 2 - .15, y0 + di / 2 + .15, 'Qubit #3', size=self._widths['textsize'], usetex=False,
                           horizontalalignment='right', verticalalignment='center')
-            self._ax.arrow(x0, y0, di, di, width=.051, edgecolor=None, facecolor='black')
+            self._ax.arrow(x0, y0, di, di, **self._arrowStyle)
         if self._sim._n > 1:
             self._ax.text(x0 - .3, y0 - alen / 2, 'Qubit #2', size=self._widths['textsize'], usetex=False,
                           horizontalalignment='right', verticalalignment='center')
-            self._ax.arrow(x0, y0, 0, -alen, width=.051, edgecolor=None, facecolor='black')
+            self._ax.arrow(x0, y0, 0, -alen, **self._arrowStyle)
         self._ax.text(x0 + alen / 2, y0 + .3, 'Qubit #1', size=self._widths['textsize'], usetex=False,
                       horizontalalignment='center', verticalalignment='center')
-        self._ax.arrow(x0, y0, alen, 0, width=.03, head_width=.3, head_length=.5, edgecolor=None, facecolor='black')
+        self._ax.arrow(x0, y0, alen, 0, **self._arrowStyle)
 
     def _drawDottedLine(self, points: list):
         self._ax.plot(self._coords[points, 0], self._coords[points, 1], color=self._colors['cube'],
@@ -242,6 +243,7 @@ class DimensionalCircleNotation(Visualization):
         self._ax.add_artist(phase)
         # Add label to circle
         label = np.binary_repr(index, width=self._sim._n)  # width is deprecated since numpy 1.12.0
+        # print(index, label)
         if self._sim._n == 3:
             off = -1.3 if int(label[1]) else 1.3
         elif self._sim._n == 2:
