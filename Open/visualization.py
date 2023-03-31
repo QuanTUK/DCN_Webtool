@@ -199,7 +199,7 @@ class DimensionalCircleNotation(Visualization):
             self._ax.set_ylim([-2, 8])
         elif self._sim._n == 3:
             self._ax.set_xlim([-5, 8.7])
-            self._ax.set_ylim([-2, 10.2])
+            self._ax.set_ylim([-2, 10.35])
             self._drawArrows(-self._c + self._o * 2 / 3, self._c + 2.5)
 
     def _drawArrows(self, x0, y0):
@@ -231,16 +231,18 @@ class DimensionalCircleNotation(Visualization):
         bg = mpatches.Circle((xpos, ypos), radius=1, color=self._colors['bg'], edgecolor=None)
         self._ax.add_artist(bg)
         # Fill area of unit circle
-        fill = mpatches.Circle((xpos, ypos), radius=self._val[index], color=self._colors['fill'], edgecolor=None)
-        self._ax.add_artist(fill)
+        if self._val[index] > 0:
+            fill = mpatches.Circle((xpos, ypos), radius=self._val[index], color=self._colors['fill'], edgecolor=None)
+            self._ax.add_artist(fill)
         # Black margin for circles
         ring = mpatches.Circle((xpos, ypos), radius=1, fill=False, edgecolor=self._colors['edge'],
                                linewidth=self._widths['edge'])
         self._ax.add_artist(ring)
         # Indicator for phase
-        phase = mlines.Line2D([xpos, xpos + self._lx[index]], [ypos, ypos + self._ly[index]],
-                              color=self._colors['phase'], linewidth=self._widths['phase'])
-        self._ax.add_artist(phase)
+        if self._val[index] > 0:
+            phase = mlines.Line2D([xpos, xpos + self._lx[index]], [ypos, ypos + self._ly[index]],
+                                  color=self._colors['phase'], linewidth=self._widths['phase'])
+            self._ax.add_artist(phase)
         # Add label to circle
         label = np.binary_repr(index, width=self._sim._n)  # width is deprecated since numpy 1.12.0
         # print(index, label)

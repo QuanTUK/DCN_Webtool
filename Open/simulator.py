@@ -555,7 +555,6 @@ class simulator():
         elif type(control_Q_bit) == int:
             c1.append(control_Q_bit)
             c2.append(control_Q_bit)
-            print(c1, c2)
         ccn1 = self.cNot(c2, i)
         ccn2 = self.cNot(c1, j)
         ccn3 = self.cNot(c2, i)
@@ -628,7 +627,7 @@ class simulator():
 
         control1 = np.array([np.identity(2)] * self._n, dtype=complex)
         control1[-control_Q_bit] = np.array([[0, 0], [0, 1]])  # |1><1| check if |1>
-        # print(control1)
+
         # NOTE: Test for >3 Qubits!
         # |0><0| check if |0>, apply I if so
         # For more than one control need to check |0>_i XOR |0>_j  i xor j <=> not(i and j)
