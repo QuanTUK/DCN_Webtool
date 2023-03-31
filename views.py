@@ -1,7 +1,9 @@
 from flask import render_template, request, session
-from simulator import simulator
-from visualization import DimensionalCircleNotation
+from qc_education_package import Simulator, DimensionalCircleNotation
 from flask import Flask
+
+import matplotlib
+matplotlib.use('agg')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf'
@@ -40,7 +42,7 @@ def quantuk_generator():
 
                 except KeyError:
                     q_bit_nr = 1
-            sim = simulator(q_bit_nr)
+            sim = Simulator(q_bit_nr)
             session['q_bits_nr_cookie'] = q_bit_nr
 
         else:
@@ -58,7 +60,7 @@ def quantuk_generator():
                 dont_look_at.append("phase" + str(i))
             # print(dont_look_at)
             control = posted_dict['control']
-            sim = simulator(jsonDump=sim_str)
+            sim = Simulator(jsonDump=sim_str)
 
             if control == "phase":
                 try:
@@ -144,7 +146,7 @@ def quantuk_generator():
                         pass
 
                 if betrag_list != [0.0]*(2 ** q_bit_nr) and phase_list != [0.0]*(2 ** q_bit_nr):
-                    sim.write_abs_phase(betrag_list, phase_list)
+                    sim.write_magn_phase(betrag_list, phase_list)
 
                 """
                 for betrag, phase in zip(betrag_list, phase_list):
