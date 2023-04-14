@@ -34,6 +34,7 @@ def quantuk_generator():
         # sim = simulator()
         posted_dict = request.form.to_dict()
         print(posted_dict)
+
         try:
             new_simulation = posted_dict['new_simulation']
         except KeyError:
@@ -280,7 +281,19 @@ def quantuk_generator():
                 except KeyError:
                     pass
 
-        vis = DimensionalCircleNotation(sim)
+            elif control == "check_seperability":
+                pass
+
+        print("posted", posted_dict)
+        try:
+            print("sv", posted_dict["show_values"])
+            if posted_dict["show_values"] == "1":
+                show_values = True
+            else:
+                show_values = False
+        except KeyError:
+            show_values = False
+        vis = DimensionalCircleNotation(sim, show_values)
         vis.draw()
         binary_label_list = []
 
