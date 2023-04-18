@@ -58,7 +58,7 @@ def quantuk_generator():
             # print(posted_dict.keys())
             dont_look_at = ['csrf_token', 'simulator', 'q_bits', 'columns', 'control', 'notbit', 'cbit', 'angle',
                             'write', 'write_bit', 'write_complex', 'radio', 'read', 'c_bit', 'n_bit', 'cangle',
-                            'rxangle', 'ryangle', 'rzangle', 'crxangle', 'cryangle', 'crzangle']
+                            'rxangle', 'ryangle', 'rzangle', 'crxangle', 'cryangle', 'crzangle', 'show_values']
             sim_str = posted_dict['simulator']
             # colum_nr = session['columns_cookie']
             q_bit_nr = session['q_bits_nr_cookie']
