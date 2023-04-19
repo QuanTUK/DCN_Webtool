@@ -16,8 +16,115 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
     <link rel="icon" href="{{ url_for('static', filename='quantuk/CNOT_gate.svg') }}">
     <style>
-        /* Set up the grid container */
-        .grid-container {
+       
+       input[type="number"] {
+            width: 150px;
+        }
+
+        /* Position and style the close button (top right corner) */
+        .sidenav .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: lightgray;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .sidenav a {
+            padding: 6px 8px 6px 16px;
+            text-decoration: none;
+            font-size: 18px;
+            color: black;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: #2c58fe;
+        }
+
+        #github {
+            position: absolute;
+            left: 10px;
+            bottom: 10px;
+        }
+
+        .download-btns {
+            margin-top: 20px;
+        }
+
+        .uppernav {
+            margin: 0 auto;
+            margin-left: 200px;
+            height: 0;
+            position: absolute;
+            top:0;
+            overflow-x: hidden;
+            /* padding-top: 20px; */
+        }
+
+        .uppernav a {
+            text-decoration: none;
+            font-size: 25px;
+            color: black;
+        }
+
+        .uppernav a:hover {
+            color: #2c58fe;
+        }
+
+        .uppernav .openbtn {
+            font-size: 36px;
+        }
+
+        /* The button used to open the sidebar */
+        #myUpperNav {
+            transition: height 1s;
+            transition: margin-left .5s;
+            font-size: 20px;
+            cursor: pointer;
+            color: white;
+            border: none;
+            z-index: 1;
+            overflow-x: hidden;
+        }
+
+        .main {
+            margin: 0 auto;
+            margin-left: 200px;
+            /* Center horizontally */
+            /* Same as the width of the sidenav */
+            padding: 0px 0;
+        }
+
+        @media screen and (max-height: 350px) {
+            .sidenav {
+                padding-top: 0px;
+            }
+        }
+
+
+        #image {
+            transition: margin-left .5s;
+        }
+
+        #buttons {
+            transition: margin-left .5s;
+        }
+
+         /* Set up the grid container */
+         .grid-container {
             display: grid;
             grid-gap: 10px;
             /* Set the space between grid items */
@@ -45,108 +152,11 @@
             background-color: #0056b3;
         }
 
-        .sidenav a:hover {
-            color: #f1f1f1;
-        }
-
-        /* Position and style the close button (top right corner) */
-        .sidenav .closebtn {
-            position: absolute;
-            top: 0;
-            right: 25px;
-            font-size: 36px;
-            margin-left: 50px;
-        }
-
-        /* The button used to open the sidebar */
-        .openbtn {
-            font-size: 20px;
-            cursor: pointer;
-            background-color: #111;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-        }
-
-        .openbtn:hover {
-            background-color: #444;
-        }
-
-        .sidenav {
-            height: 100%;
-            width: 200px;
-            position: fixed;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            background-color: lightgray;
-            overflow-x: hidden;
-            padding-top: 20px;
-        }
-
-        .sidenav a {
-            padding: 6px 8px 6px 16px;
-            text-decoration: none;
-            font-size: 25px;
-            color: black;
-            display: block;
-        }
-
-        .sidenav a:hover {
-            color: blue;
-        }
-
-        .main {
-            margin-left: 160px;
-            /* Same as the width of the sidenav */
-            font-size: 28px;
-            /* Increased text to enable scrolling */
-            padding: 0px 10px;
-        }
-
-        @media screen and (max-height: 450px) {
-            .sidenav {
-                padding-top: 15px;
-            }
-
-        .sidenav a {
-                font-size: 18px;
-            }
-        }
-
-        #main {
-            transition: margin-left .5s;
-            padding: 16px;
-        }
-
-        #github {
-            position: absolute;
-            left: 20px;
-            bottom: 20px;
-        }
-
-        .download-btns {
-            margin-top: 20px;
-        }
-
-        input[type="number"] {
-            width: 150px;
-        }
-
         .white-box {
             background-color: white;
             pointer-events: none;
         }
 
-        .btn-gate {
-            border: none;
-            padding: 0;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-        }
     </style>
 
     <title>DCN-Webtool</title>
@@ -165,7 +175,7 @@
             <div class="sidenav" id="mySidebar">
                 <div class="container">
                     <h2>Options</h2>
-                    <!-- <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a> -->
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
 
                     <span>Number of Qubits<input type="number" name="q_bits" id="q_bit_nr" placeholder="1" min="1"
                             max="3" value="1"></span><br>
@@ -178,7 +188,7 @@
                         <option value="0">False</option>
                         <option value="1">True</option>
                     </select>
-
+                    <br/>
                     <input class="btn btn-primary btn-lg" type="submit" value="Reset/Set Up" name="new_simulation">
 
                     <div class="download-btns">
@@ -213,10 +223,18 @@
                     </div>
                 </div>
             </div>
+
+            
+            <div class="uppernav" id="myUpperNav">
+                <div class="container">
+                        <a  href="javascript:void(0)" class="openbtn" onclick="openNav()">☰ Open Sidebar</a>
+                </div>
+            </div>
+
             {% if visualized != None %}
             <div class="container">
-                <div class="main" id="main">
-                    <!-- <button class="openbtn" onclick="openNav()">☰ Open Sidebar</button> -->
+                <div class="main" id="image">
+                    
                     
                     <div class="row">
                         <div class="card card-body">
@@ -237,12 +255,43 @@
 
                 </div>
                 <div class="container">
+                    <div class="main" id="buttons">
                     <div class="grid-container" style="grid-template-columns:14% 14% 14% 14% 14% 14% 14%">
                         <button type="button" class="grid-item" data-toggle="modal" data-target="#writemodal"
                             style="background-color:green; border-color:green">
                             <!--<img src="{{ url_for('static', filename='quantuk/CNOT_gate.svg') }}" width="25"/> -->
                             <span style="margin-left: 10px;">Write Int</span>
                         </button>
+                        <div class="modal fade" id="writemodal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+                     aria-labelledby="writemodalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="writemodalLabel">Describe Qubits</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="col-sm">
+                                    <label class="form-check-label" for="writebit">Write: </label>
+                                    <input class="form-radio-input" type="number" id="writebit" placeholder="0"
+                                           name="write_bit" min="0" max="{{binary_label_list|length-1}}">
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss
+                                </button>
+                                <button class="btn btn-default btn-success" type="submit" name="control"
+                                        value="write">
+                                    Apply
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
 
                         <button type="button" class="grid-item" data-toggle="modal" data-target="#writecmodal"
@@ -351,7 +400,7 @@
                         </div>
 
 
-                        <button class="grid-item" type="submit" value="separability" name="control"
+                        <button class="grid-item" type="submit" value="check_seperability" name="control"
                             style="background-color:green; border-color:green">Check Separability</button>
                             
                         
@@ -1107,14 +1156,12 @@
 
 
                 </div>
+            </div>
                 {% endif %}
-
-
     </form>
 
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
@@ -1122,12 +1169,25 @@
     <script>
         function openNav() {
             document.getElementById("mySidebar").style.width = "200px";
-            document.getElementById("main").style.marginLeft = "200px";
+            // Element main may not exist
+            // {% if visualized != None %}
+                document.getElementById("image").style.marginLeft = "200px";
+                document.getElementById("buttons").style.marginLeft = "200px";
+                document.getElementById("myUpperNav").style.marginLeft = "200px";
+            // {% endif %}
+            document.getElementById("myUpperNav").style.height = "0";
         }
 
         function closeNav() {
             document.getElementById("mySidebar").style.width = "0";
-            document.getElementById("main").style.marginLeft = "0";
+            // Element main may not exist
+            // {% if visualized != None %}
+                document.getElementById("image").style.marginLeft = "0";
+                document.getElementById("buttons").style.marginLeft = "0";
+                document.getElementById("myUpperNav").style.marginLeft = "0";
+            // {% endif %}
+            document.getElementById("myUpperNav").style.height = "55px";
+            
         }
     </script>
 

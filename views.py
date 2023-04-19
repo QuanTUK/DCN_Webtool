@@ -31,39 +31,30 @@ def quantuk_generator():
                                visualized=None, q_bits=0, simulator=None, binary_label_list=[])
 
     else:
-        # sim = simulator()
         posted_dict = request.form.to_dict()
         print(posted_dict)
 
         new_simulation = 'new_simulation' in posted_dict or 'simulator' in posted_dict and posted_dict['simulator'] == 'None'
-        # print(new_simulation)
-        # try:
-        #     new_simulation = posted_dict['new_simulation']
-        #     sim_str = posted_dict['simulator']
-        # except KeyError:
-        #     new_simulation = False
-        # #
+
         if new_simulation:
             try:
                 q_bit_nr = int(posted_dict['q_bits'])
-
             except ValueError:
                 try:
                     q_bit_nr = session['q_bits_nr_cookie']
-
                 except KeyError:
                     q_bit_nr = 1
+
             sim = Simulator(q_bit_nr)
             session['q_bits_nr_cookie'] = q_bit_nr
 
         else:
-            # print("keep old simulation")
-            # print(posted_dict.keys())
+
             dont_look_at = ['csrf_token', 'simulator', 'q_bits', 'columns', 'control', 'notbit', 'cbit', 'angle',
                             'write', 'write_bit', 'write_complex', 'radio', 'read', 'c_bit', 'n_bit', 'cangle',
                             'rxangle', 'ryangle', 'rzangle', 'crxangle', 'cryangle', 'crzangle', 'show_values']
             sim_str = posted_dict['simulator']
-            # colum_nr = session['columns_cookie']
+
             q_bit_nr = session['q_bits_nr_cookie']
 
             for i in range(0, 2**q_bit_nr):
@@ -74,60 +65,11 @@ def quantuk_generator():
                 control = posted_dict['control']
             except KeyError:
                 control = ""
-            print(sim_str)
 
             sim = Simulator(jsonDump=sim_str)
 
-            if control == "phase":
-                try:
-                    angle = int(posted_dict['angle'])
-                    q_bits_2_apply = []
-                    for key in posted_dict.keys():
-                        if key not in dont_look_at:
-                            q_bits_2_apply.append(int(key))
-                    sim.phase(angle=angle, qubit=q_bits_2_apply)
-                except (ValueError, KeyError):
-                    pass
 
-            elif control == "qnot":
-                q_bits_2_apply = []
-                for key in posted_dict.keys():
-                    if key not in dont_look_at:
-                        q_bits_2_apply.append(int(key))
-                if len(q_bits_2_apply) > 0:
-                    sim.qnot(q_bits_2_apply)
-
-            elif control == "had":
-                q_bits_2_apply = []
-                for key in posted_dict.keys():
-                    if key not in dont_look_at:
-                        q_bits_2_apply.append(int(key))
-                if len(q_bits_2_apply) > 0:
-                    sim.had(q_bits_2_apply)
-
-            elif control == "chad":
-                q_bits_2_apply = []
-                try:
-                    control_bit = int(posted_dict['c_bit'])
-                except KeyError:
-                    control_bit = -1
-                for key in posted_dict.keys():
-                    if key not in dont_look_at:
-                        q_bits_2_apply.append(int(key))
-                if len(q_bits_2_apply) > 0 and control_bit != -1:
-                    sim.cHad(q_bits_2_apply, control_bit)
-
-            elif control == "cnot":
-                try:
-                    not_bit = int(posted_dict['n_bit'])
-                    control_bit = int(posted_dict['c_bit'])
-
-                    if not_bit != control_bit:
-                        sim.cNot(control_bit, not_bit)
-                except (KeyError, ValueError):
-                    pass
-
-            elif control == 'write':
+            if control == 'write':
                 try:
                     write_bit = int(posted_dict['write_bit'])
                     if write_bit >= 2 ** q_bit_nr:
@@ -136,6 +78,7 @@ def quantuk_generator():
                         sim.write(write_bit)
                 except ValueError:
                     pass
+
 
             elif control == 'write_complex':
                 betrag_keys = []
@@ -164,6 +107,7 @@ def quantuk_generator():
                 if betrag_list != [0.0]*(2 ** q_bit_nr) and phase_list != [0.0]*(2 ** q_bit_nr):
                     sim.write_magn_phase(betrag_list, phase_list)
 
+
             elif control == 'read':
                 q_bits_2_apply = 0
                 for key in posted_dict.keys():
@@ -175,6 +119,55 @@ def quantuk_generator():
 
                 read_output = sim.read(q_bits_2_apply)
 
+            
+            elif control == "check_seperability":
+                pass
+
+
+            elif control == 'Set global Phase to 0':
+                sim.setGlobalPhase0()
+
+
+            elif control == "qnot":
+                q_bits_2_apply = []
+                for key in posted_dict.keys():
+                    if key not in dont_look_at:
+                        q_bits_2_apply.append(int(key))
+                if len(q_bits_2_apply) > 0:
+                    sim.qnot(q_bits_2_apply)
+
+
+            elif control == "had":
+                q_bits_2_apply = []
+                for key in posted_dict.keys():
+                    if key not in dont_look_at:
+                        q_bits_2_apply.append(int(key))
+                if len(q_bits_2_apply) > 0:
+                    sim.had(q_bits_2_apply)
+            
+
+            elif control == 'swap':
+                q_bits_2_apply = []
+                for key in posted_dict.keys():
+                    if key not in dont_look_at:
+                        q_bits_2_apply.append(int(key))
+                # print("swap", q_bits_2_apply)
+                if len(q_bits_2_apply) == 2:
+                    sim.swap(q_bits_2_apply[0], q_bits_2_apply[1])
+
+
+            elif control == "phase":
+                try:
+                    angle = int(posted_dict['angle'])
+                    q_bits_2_apply = []
+                    for key in posted_dict.keys():
+                        if key not in dont_look_at:
+                            q_bits_2_apply.append(int(key))
+                    sim.phase(angle=angle, qubit=q_bits_2_apply)
+                except (ValueError, KeyError):
+                    pass
+       
+            
             elif control == 'rx':
                 try:
                     angle = int(posted_dict['rxangle'])
@@ -185,6 +178,7 @@ def quantuk_generator():
                         sim.rx(angle, c_bit)
                 except (ValueError, KeyError):
                     pass
+
 
             elif control == 'ry':
                 try:
@@ -197,6 +191,7 @@ def quantuk_generator():
                 except (ValueError, KeyError):
                     pass
 
+
             elif control == 'rz':
                 try:
                     angle = int(posted_dict['rzangle'])
@@ -208,6 +203,56 @@ def quantuk_generator():
                 except (ValueError, KeyError):
                     pass
 
+
+            elif control == "cnot":
+                try:
+                    not_bit = int(posted_dict['n_bit'])
+                    control_bit = int(posted_dict['c_bit'])
+
+                    if not_bit != control_bit:
+                        sim.cNot(control_bit, not_bit)
+                except (KeyError, ValueError):
+                    pass
+
+
+            elif control == "chad":
+                q_bits_2_apply = []
+                try:
+                    control_bit = int(posted_dict['c_bit'])
+                except KeyError:
+                    control_bit = -1
+                for key in posted_dict.keys():
+                    if key not in dont_look_at:
+                        q_bits_2_apply.append(int(key))
+                if len(q_bits_2_apply) > 0 and control_bit != -1:
+                    sim.cHad(q_bits_2_apply, control_bit)
+
+            
+            elif control == "cswap":
+                try:
+                    control_bit = int(posted_dict['c_bit'])
+                    q_bits_2_apply = []
+                    for key in posted_dict.keys():
+                        if key not in dont_look_at:
+                            q_bits_2_apply.append(int(key))
+                    # print("swap", q_bits_2_apply)
+                    if len(q_bits_2_apply) == 2 and control_bit not in q_bits_2_apply:
+                        sim.cSwap([control_bit], q_bits_2_apply[0], q_bits_2_apply[1])
+                except KeyError:
+                    pass
+
+
+
+            elif control == 'cphase':
+                try:
+                    not_bit = int(posted_dict['n_bit'])
+                    control_bit = int(posted_dict['c_bit'])
+                    angle = int(posted_dict['cangle'])
+                    sim.cPhase(angle, control_bit, not_bit)
+                except KeyError:
+                    pass
+
+
             elif control == 'crx':
                 try:
                     angle = int(posted_dict['crxangle'])
@@ -216,6 +261,7 @@ def quantuk_generator():
                     sim.cRx(angle, c_bit, n_bit)
                 except (ValueError, KeyError):
                     pass
+
 
             elif control == 'cry':
                 try:
@@ -226,6 +272,7 @@ def quantuk_generator():
                 except (ValueError, KeyError):
                     pass
 
+
             elif control == 'crz':
                 try:
                     angle = int(posted_dict['crzangle'])
@@ -235,14 +282,6 @@ def quantuk_generator():
                 except (ValueError, KeyError):
                     pass
 
-            elif control == 'swap':
-                q_bits_2_apply = []
-                for key in posted_dict.keys():
-                    if key not in dont_look_at:
-                        q_bits_2_apply.append(int(key))
-                # print("swap", q_bits_2_apply)
-                if len(q_bits_2_apply) == 2:
-                    sim.swap(q_bits_2_apply[0], q_bits_2_apply[1])
 
             elif control == 'ccnot':
                 try:
@@ -257,32 +296,7 @@ def quantuk_generator():
                     sim.cNot(q_bits_2_apply, not_bit)
                 except (ValueError, KeyError):
                     pass
-            elif control == 'cphase':
-                try:
-                    not_bit = int(posted_dict['n_bit'])
-                    control_bit = int(posted_dict['c_bit'])
-                    angle = int(posted_dict['cangle'])
-                    sim.cPhase(angle, control_bit, not_bit)
-                except KeyError:
-                    pass
-
-            elif control == 'Set global Phase to 0':
-                sim.setGlobalPhase0()
-            elif control == "cswap":
-                try:
-                    control_bit = int(posted_dict['c_bit'])
-                    q_bits_2_apply = []
-                    for key in posted_dict.keys():
-                        if key not in dont_look_at:
-                            q_bits_2_apply.append(int(key))
-                    # print("swap", q_bits_2_apply)
-                    if len(q_bits_2_apply) == 2 and control_bit not in q_bits_2_apply:
-                        sim.cSwap([control_bit], q_bits_2_apply[0], q_bits_2_apply[1])
-                except KeyError:
-                    pass
-
-            elif control == "check_seperability":
-                pass
+            
 
         try:
             print("sv", posted_dict["show_values"])
@@ -304,8 +318,6 @@ def quantuk_generator():
             if diff > 0:
                 binary = "0"*diff+binary
             binary_label_list.append(binary)
-
-        # print(binary_label_list)
 
         return render_template("quantuk_generator.html", # user=current_user,
                                visualized=vis.export_base64("png"),
