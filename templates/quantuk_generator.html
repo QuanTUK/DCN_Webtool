@@ -10,12 +10,82 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
-
     <link rel="icon" href="{{ url_for('static', filename='quantuk/CNOT_gate.svg') }}">
+    <style>
+body {
+  font-family: "Lato", sans-serif;
+}
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+/* The button used to open the sidebar */
+.openbtn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #111;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+}
+
+.openbtn:hover {
+  background-color: #444;
+}
+
+.sidenav {
+  height: 100%;
+  width: 220px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: lightgray;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  color: black;
+  display: block;
+}
+
+.sidenav a:hover {
+  color: blue;
+}
+
+.main {
+  margin-left: 160px; /* Same as the width of the sidenav */
+  font-size: 28px; /* Increased text to enable scrolling */
+  padding: 0px 10px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+#main {
+  transition: margin-left .5s;
+  padding: 16px;
+}
+
+
+    </style>
 
     <title>Generator</title>
 </head>
@@ -28,49 +98,88 @@
     <h4 class="text" id="rat_question">{{rat_question}}</h4>
     <br/>
     <div class="container">
-        <h4>Options</h4>
-        <div class="row">
-            <div class="col-sm">
-                <label for="q_bit_nr" class="col-form-label">Number of Qubits </label>
-                <input type="number" name="q_bits" id="q_bit_nr" placeholder="1" min="1" max="3">
-            </div>
+    <div class="sidenav" id="mySidebar">
+        <div class="container">
+        <h2>Options</h2>
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
 
-            <div class="col-sm">
-                <label class="form-check-label" for="show_values">Show Values</label>
-                <input class="form-check-input" type="checkbox" id="show_values" value="1" name="show_values">
-            </div>
+        <span>Number of Qubits<input type="number" name="q_bits" id="q_bit_nr" placeholder="1" min="1" max="3"></span>
+        <!-- <label for="q_bit_nr" class="col-form-label">Number of Qubits </label> -->
 
-            <div class="col-sm">
-                <input class="btn btn-primary btn-lg" type="submit" value="Reset and set up new Qubit System"
-                       name="new_simulation">
-            </div>
+        <!--<span><input class="form-check-input" type="checkbox" id="show_values" value="1" name="show_values">
+        <label class="form-check-label" for="show_values">Show Values</label></span>-->
+        <label class="form-check-label" for="show_values">Show Values</label>
+        <select id="show_values" name="show_values">
+            <option value="0">False</option>
+            <option value="1">True</option>
+        </select>
 
-            <!-- Download-->
-            <div class="col-sm">
-                <button type="button" class="btn btn-primary btn-lg" style="color:#0d69ac;">
-                    <a download="graphic.png" href="data:image/png;base64,{{visualized}}" style="color:white"> <i
-                            class='fa fa-download'>
-                        Download PNG</i></a>
-                </button>
-            </div>
-            <!-- Download PDF-->
-            <div class="col-sm">
-                <button type="button" class="btn btn-primary btn-lg" style="color:#0d69ac;">
-                    <a download="graphic.pdf" href="data:application/pdf;base64,{{visualized_pdf}}" style="color:white"> <i
-                            class='fa fa-download'>
-                        Download PDF</i></a>
-                </button>
-            </div>
-            <!-- GitHub Link-->
-            <div class="col-sm">
-                <button type="button" class="btn btn-primary btn-lg" style="color:#0d69ac;">
-                    <a href="https://github.com/QuanTUK/DCN_Webtool" style="color:white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" style="height:20px"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+
+        <input class="btn btn-primary btn-lg" type="submit" value="Reset/Set Up"
+               name="new_simulation">
+        <a download="graphic.png" href="data:image/png;base64,{{visualized}}"> <i
+                class='fa fa-download'>
+            Download PNG</i>
+        </a>
+        <a download="graphic.pdf" href="data:application/pdf;base64,{{visualized_pdf}}"> <i
+                    class='fa fa-download'>
+                Download PDF</i></a>
+        <a href="https://github.com/QuanTUK/DCN_Webtool" target="_blank"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" style="height:20px">
+    <!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+                        View Sourcecode on GitHub</i></a>
+        </div>
+    </div>
+    <!--
+    <h4>Options</h4>
+    <div class="row">
+        <div class="col-sm">
+            <input type="number" name="q_bits" id="q_bit_nr" placeholder="1" min="1" max="3">
+            <label for="q_bit_nr" class="col-form-label">Number of Qubits </label>
+        </div> -->
+    <!-- Download-->
+    <!--<div class="col-sm">
+        <button type="button" class="btn btn-primary btn-lg" style="color:#0d69ac;">
+            <a download="graphic.png" href="data:image/png;base64,{{visualized}}" style="color:white"> <i
+                    class='fa fa-download'>
+                Download PNG</i></a>
+        </button>
+    </div>
+</div>
+<br>
+<div class="row">
+
+    <div class="col-sm">
+        <input class="form-check-input" type="checkbox" id="show_values" value="1" name="show_values">
+        <label class="form-check-label" for="show_values">Show Values</label>
+    </div> -->
+    <!-- Download PDF-->
+    <!--
+        <div class="col-sm">
+            <button type="button" class="btn btn-primary btn-lg" style="color:#0d69ac;">
+                <a download="graphic.pdf" href="data:application/pdf;base64,{{visualized_pdf}}" style="color:white"> <i
+                        class='fa fa-download'>
+                    Download PDF</i></a>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            <input class="btn btn-primary btn-lg" type="submit" value="Reset and set up new Qubit System"
+                   name="new_simulation">
+        </div> -->
+    <!-- GitHub Link-->
+    <!--
+        <div class="col-sm">
+            <button type="button" class="btn btn-primary btn-lg" style="color:#0d69ac;">
+                <a href="https://github.com/QuanTUK/DCN_Webtool" style="color:white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" style="height:20px">-->
+    <!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><!--<path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
                         View Sourcecode on GitHub</i></a>
                 </button>
             </div>
 
-        </div>
-
+        </div>-->
+    <div class="main" id="main">
+        <button class="openbtn" onclick="openNav()">☰ Open Sidebar</button>
         {% if visualized != None %}
         <div class="row">
 
@@ -241,7 +350,8 @@
         <div class="row">
             <!-- Rx GATE-->
             <div class="col-sm">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rxmodal" style="background-color: #507289; border-color: #507289">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rxmodal"
+                        style="background-color: #507289; border-color: #507289">
                     <img src="{{ url_for('static', filename='quantuk/Qcircuit_RXtheta.svg') }}" width="25"/><span
                         style="margin-left: 10px;"
                 >Rx</span>
@@ -251,7 +361,9 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="rxmodalLabel">Apply Rx to Qubit <img src="{{ url_for('static', filename='quantuk/Qcircuit_RXtheta.svg') }}" width="75"/></h5>
+                                <h5 class="modal-title" id="rxmodalLabel">Apply Rx to Qubit <img
+                                        src="{{ url_for('static', filename='quantuk/Qcircuit_RXtheta.svg') }}"
+                                        width="75"/></h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -291,7 +403,8 @@
             </div>
             <!-- Ry GATE-->
             <div class="col-sm">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rymodal" style="background-color: #507289; border-color: #507289">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rymodal"
+                        style="background-color: #507289; border-color: #507289">
                     <img src="{{ url_for('static', filename='quantuk/Qcircuit_RYtheta.svg') }}" width="25"/><span
                         style="margin-left: 10px;"
                 >Ry</span>
@@ -301,7 +414,9 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="rymodalLabel">Apply Ry to Qubit<img src="{{ url_for('static', filename='quantuk/Qcircuit_RYtheta.svg') }}" width="75"/></h5>
+                                <h5 class="modal-title" id="rymodalLabel">Apply Ry to Qubit<img
+                                        src="{{ url_for('static', filename='quantuk/Qcircuit_RYtheta.svg') }}"
+                                        width="75"/></h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -341,7 +456,8 @@
             </div>
             <!-- Rz GATE-->
             <div class="col-sm">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rzmodal" style="background-color: #507289; border-color: #507289">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rzmodal"
+                        style="background-color: #507289; border-color: #507289">
                     <img src="{{ url_for('static', filename='quantuk/Qcircuit_RZtheta.svg') }}" width="25"/><span
                         style="margin-left: 10px;"
                 >Rz</span>
@@ -351,7 +467,9 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="rzmodalLabel">Apply Rz to Qubit<img src="{{ url_for('static', filename='quantuk/Qcircuit_RZtheta.svg') }}" width="75"/></h5>
+                                <h5 class="modal-title" id="rzmodalLabel">Apply Rz to Qubit<img
+                                        src="{{ url_for('static', filename='quantuk/Qcircuit_RZtheta.svg') }}"
+                                        width="75"/></h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -391,7 +509,8 @@
             </div>
             <!-- Hadamard GATE-->
             <div class="col-sm">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#hadmodal" style="background-color: #507289; border-color: #507289">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#hadmodal"
+                        style="background-color: #507289; border-color: #507289">
                     <img src="{{ url_for('static', filename='quantuk/Hadamard.svg') }}" width="25"/>
                     <span style="margin-left: 10px;">Hadamard</span>
                 </button>
@@ -400,7 +519,9 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="hadmodalLabel">Apply Hadamard to Qubit <img src="{{ url_for('static', filename='quantuk/Hadamard.svg') }}" width="75"/></h5>
+                                <h5 class="modal-title" id="hadmodalLabel">Apply Hadamard to Qubit <img
+                                        src="{{ url_for('static', filename='quantuk/Hadamard.svg') }}" width="75"/>
+                                </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -429,7 +550,8 @@
             </div>
             <!-- NOT GATE-->
             <div class="col-sm">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#notmodal" style="background-color: #507289; border-color: #507289">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#notmodal"
+                        style="background-color: #507289; border-color: #507289">
                     <img src="{{ url_for('static', filename='quantuk/Qcircuit_X.svg') }}" width="25"/><span
                         style="margin-left: 10px;"
                 >NOT</span>
@@ -439,7 +561,9 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="notmodalLabel">Apply NOT to Qubit <img src="{{ url_for('static', filename='quantuk/Qcircuit_X.svg') }}" width="75"/></h5>
+                                <h5 class="modal-title" id="notmodalLabel">Apply NOT to Qubit <img
+                                        src="{{ url_for('static', filename='quantuk/Qcircuit_X.svg') }}"
+                                        width="75"/></h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -468,7 +592,8 @@
             </div>
             <!-- PHASE GATE-->
             <div class="col-sm">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#phase" style="background-color: #507289; border-color: #507289">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#phase"
+                        style="background-color: #507289; border-color: #507289">
                     <img src="{{ url_for('static', filename='quantuk/Qcircuit_Pphi.svg') }}" width="25"/><span
                         style="margin-left: 10px;"
                 >Phase</span>
@@ -478,7 +603,9 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="phaseLabel">Apply Phase to Qubit <img src="{{ url_for('static', filename='quantuk/Qcircuit_Pphi.svg') }}" width="75"/></h5>
+                                <h5 class="modal-title" id="phaseLabel">Apply Phase to Qubit <img
+                                        src="{{ url_for('static', filename='quantuk/Qcircuit_Pphi.svg') }}"
+                                        width="75"/></h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -517,7 +644,8 @@
         <div class="row">
             <!-- CRx GATE-->
             <div class="col-sm">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#crxmodal" style="background-color: #2c58fe; border-color: #2c58fe">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#crxmodal"
+                        style="background-color: #2c58fe; border-color: #2c58fe">
                     <img src="{{ url_for('static', filename='quantuk/CRXtheta.svg') }}" width="25"/>
                     <span style="margin-left: 10px;">CRx</span>
                 </button>
@@ -526,7 +654,9 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="crxmodalLabel">Apply CRx to Qubit <img src="{{ url_for('static', filename='quantuk/CRXtheta.svg') }}" width="50"/></h5>
+                                <h5 class="modal-title" id="crxmodalLabel">Apply CRx to Qubit <img
+                                        src="{{ url_for('static', filename='quantuk/CRXtheta.svg') }}" width="50"/>
+                                </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -569,7 +699,8 @@
             </div>
             <!-- CRy GATE-->
             <div class="col-sm">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#crymodal" style="background-color: #2c58fe; border-color: #2c58fe">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#crymodal"
+                        style="background-color: #2c58fe; border-color: #2c58fe">
                     <img src="{{ url_for('static', filename='quantuk/CRYtheta.svg') }}" width="25"/>
                     <span style="margin-left: 10px;">CRy</span>
                 </button>
@@ -578,7 +709,9 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="crymodalLabel">Apply CRy to Qubit <img src="{{ url_for('static', filename='quantuk/CRYtheta.svg') }}" width="50"/></h5>
+                                <h5 class="modal-title" id="crymodalLabel">Apply CRy to Qubit <img
+                                        src="{{ url_for('static', filename='quantuk/CRYtheta.svg') }}" width="50"/>
+                                </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -621,7 +754,8 @@
             </div>
             <!-- CRz GATE-->
             <div class="col-sm">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#crz" style="background-color: #2c58fe; border-color: #2c58fe">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#crz"
+                        style="background-color: #2c58fe; border-color: #2c58fe">
                     <img src="{{ url_for('static', filename='quantuk/CRZtheta.svg') }}" width="25"/><span
                         style="margin-left: 10px;"
                 >CRz</span>
@@ -631,7 +765,9 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="crzLabel">Apply CRz to Qubit <img src="{{ url_for('static', filename='quantuk/CRZtheta.svg') }}" width="50"/></h5>
+                                <h5 class="modal-title" id="crzLabel">Apply CRz to Qubit <img
+                                        src="{{ url_for('static', filename='quantuk/CRZtheta.svg') }}" width="50"/>
+                                </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -674,7 +810,8 @@
             </div>
             <!-- CHadamard GATE-->
             <div class="col-sm">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#chadmodal" style="background-color: #2c58fe; border-color: #2c58fe">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#chadmodal"
+                        style="background-color: #2c58fe; border-color: #2c58fe">
                     <img src="{{ url_for('static', filename='quantuk/Hadamard.svg') }}" width="25"/>
                     <span style="margin-left: 10px;">CHadamard</span>
                 </button>
@@ -683,7 +820,9 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="chadmodalLabel">Apply CHadamard to Qubits <img src="{{ url_for('static', filename='quantuk/Hadamard.svg') }}" width="75"/></h5>
+                                <h5 class="modal-title" id="chadmodalLabel">Apply CHadamard to Qubits <img
+                                        src="{{ url_for('static', filename='quantuk/Hadamard.svg') }}" width="75"/>
+                                </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -722,8 +861,10 @@
             </div>
             <!-- SWAP GATE-->
             <div class="col-sm">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#swap" style="background-color: #2c58fe; border-color: #2c58fe">
-                    <img src="{{ url_for('static', filename='quantuk/Qcircuit_swap-crossed.svg') }}" width="25"/><span
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#swap"
+                        style="background-color: #2c58fe; border-color: #2c58fe">
+                    <img src="{{ url_for('static', filename='quantuk/Qcircuit_swap-crossed.svg') }}"
+                         width="25"/><span
                         style="margin-left: 10px;"
                 >SWAP</span>
                 </button>
@@ -732,7 +873,9 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="swapLabel">Apply Swap to 2 Qubits <img src="{{ url_for('static', filename='quantuk/Qcircuit_swap-crossed.svg') }}" width="50"/></h5>
+                                <h5 class="modal-title" id="swapLabel">Apply Swap to 2 Qubits <img
+                                        src="{{ url_for('static', filename='quantuk/Qcircuit_swap-crossed.svg') }}"
+                                        width="50"/></h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -763,8 +906,10 @@
             </div>
             <!-- CSWAP GATE-->
             <div class="col-sm">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cswap" style="background-color: #2c58fe; border-color: #2c58fe">
-                    <img src="{{ url_for('static', filename='quantuk/Qcircuit_Cswap-crossed.svg') }}" width="25"/><span
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cswap"
+                        style="background-color: #2c58fe; border-color: #2c58fe">
+                    <img src="{{ url_for('static', filename='quantuk/Qcircuit_Cswap-crossed.svg') }}"
+                         width="25"/><span
                         style="margin-left: 10px;"
                 >CSWAP</span>
                 </button>
@@ -773,7 +918,9 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="cswapLabel">Apply CSwap to 2 Qubits <img src="{{ url_for('static', filename='quantuk/Qcircuit_Cswap-crossed.svg') }}" width="50"/></h5>
+                                <h5 class="modal-title" id="cswapLabel">Apply CSwap to 2 Qubits <img
+                                        src="{{ url_for('static', filename='quantuk/Qcircuit_Cswap-crossed.svg') }}"
+                                        width="50"/></h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -815,7 +962,8 @@
             </div>
             <!-- CNOT GATE-->
             <div class="col-sm">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cnotmodal" style="background-color: #2c58fe; border-color: #2c58fe">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cnotmodal"
+                        style="background-color: #2c58fe; border-color: #2c58fe">
                     <img src="{{ url_for('static', filename='quantuk/CNOT_gate.svg') }}" width="25"/><span
                         style="margin-left: 10px;"
                 >CNOT</span>
@@ -825,7 +973,9 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="cnotmodalLabel">Apply CNOT to Qubit <img src="{{ url_for('static', filename='quantuk/CNOT_gate.svg') }}" width="50"/></h5>
+                                <h5 class="modal-title" id="cnotmodalLabel">Apply CNOT to Qubit <img
+                                        src="{{ url_for('static', filename='quantuk/CNOT_gate.svg') }}" width="50"/>
+                                </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -867,7 +1017,8 @@
             </div>
             <!-- CCNOT GATE-->
             <div class="col-sm">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ccnot" style="background-color: #2c58fe; border-color: #2c58fe">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ccnot"
+                        style="background-color: #2c58fe; border-color: #2c58fe">
                     <img src="{{ url_for('static', filename='quantuk/Toffoli_gate.svg') }}" width="25"/><span
                         style="margin-left: 10px;"
                 >CCNOT</span>
@@ -877,7 +1028,9 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="ccnotLabel">Apply CCNOT to Qubit <img src="{{ url_for('static', filename='quantuk/Toffoli_gate.svg') }}" width="50"/></h5>
+                                <h5 class="modal-title" id="ccnotLabel">Apply CCNOT to Qubit <img
+                                        src="{{ url_for('static', filename='quantuk/Toffoli_gate.svg') }}"
+                                        width="50"/></h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -919,7 +1072,8 @@
             </div>
             <!-- CPhase GATE-->
             <div class="col-sm">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cphase" style="background-color: #2c58fe; border-color: #2c58fe">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cphase"
+                        style="background-color: #2c58fe; border-color: #2c58fe">
                     <img src="{{ url_for('static', filename='quantuk/Qcircuit_CPphi.svg') }}" width="25"/><span
                         style="margin-left: 10px;"
                 >CPhase</span>
@@ -929,7 +1083,9 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="cphaseLabel">Apply CPhase to Qubit <img src="{{ url_for('static', filename='quantuk/Qcircuit_CPphi.svg') }}" width="50"/></h5>
+                                <h5 class="modal-title" id="cphaseLabel">Apply CPhase to Qubit <img
+                                        src="{{ url_for('static', filename='quantuk/Qcircuit_CPphi.svg') }}"
+                                        width="50"/></h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -986,16 +1142,27 @@
         </div>
         <br>
         {% endif %}
-
+    </div>
     </div>
 </form>
 
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 
+<script>
+function openNav() {
+  document.getElementById("mySidebar").style.width = "250px";
+  document.getElementById("main").style.marginLeft = "250px";
+}
 
-
+function closeNav() {
+  document.getElementById("mySidebar").style.width = "0";
+  document.getElementById("main").style.marginLeft= "0";
+}
+</script>
 </body>
 </html>

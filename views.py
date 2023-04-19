@@ -67,7 +67,10 @@ def quantuk_generator():
                 dont_look_at.append("betrag"+str(i))
                 dont_look_at.append("phase" + str(i))
             # print(dont_look_at)
-            control = posted_dict['control']
+            try:
+                control = posted_dict['control']
+            except KeyError:
+                control = ""
             sim = Simulator(jsonDump=sim_str)
 
             if control == "phase":
@@ -77,7 +80,7 @@ def quantuk_generator():
                     for key in posted_dict.keys():
                         if key not in dont_look_at:
                             q_bits_2_apply.append(int(key))
-                    sim.phase(angle=angle, Q_bit=q_bits_2_apply)
+                    sim.phase(angle=angle, qubit=q_bits_2_apply)
                 except (ValueError, KeyError):
                     pass
 
@@ -156,14 +159,6 @@ def quantuk_generator():
                 if betrag_list != [0.0]*(2 ** q_bit_nr) and phase_list != [0.0]*(2 ** q_bit_nr):
                     sim.write_magn_phase(betrag_list, phase_list)
 
-                """
-                for betrag, phase in zip(betrag_list, phase_list):
-                    value = betrag * np.exp(1j * np.deg2rad(phase))
-
-                    # value = betrag * np.exp(1j*phase)
-                    complex_results.append(value)
-                sim.write_complex(complex_results)
-                """
             elif control == 'read':
                 q_bits_2_apply = 0
                 for key in posted_dict.keys():
@@ -284,7 +279,6 @@ def quantuk_generator():
             elif control == "check_seperability":
                 pass
 
-        print("posted", posted_dict)
         try:
             print("sv", posted_dict["show_values"])
             if posted_dict["show_values"] == "1":
@@ -313,6 +307,10 @@ def quantuk_generator():
                                visualized_pdf=vis.export_base64("pdf"),
                                q_bits=q_bit_nr, simulator=str(sim), read_output=read_output,
                                binary_label_list=binary_label_list)
+
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    return render_template("test.html")
 
 
 app.run(debug=True)
