@@ -305,6 +305,7 @@ def quantuk_generator():
         return render_template("quantuk_generator.html", # user=current_user,
                                visualized=vis.export_base64("png"),
                                visualized_pdf=vis.export_base64("pdf"),
+                               visualized_svg=vis.export_base64("svg"),
                                q_bits=q_bit_nr, simulator=str(sim), read_output=read_output,
                                binary_label_list=binary_label_list)
 
