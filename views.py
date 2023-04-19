@@ -35,11 +35,14 @@ def quantuk_generator():
         posted_dict = request.form.to_dict()
         print(posted_dict)
 
-        try:
-            new_simulation = posted_dict['new_simulation']
-        except KeyError:
-            new_simulation = False
-        #
+        new_simulation = 'new_simulation' in posted_dict or 'simulator' in posted_dict and posted_dict['simulator'] == 'None'
+        # print(new_simulation)
+        # try:
+        #     new_simulation = posted_dict['new_simulation']
+        #     sim_str = posted_dict['simulator']
+        # except KeyError:
+        #     new_simulation = False
+        # #
         if new_simulation:
             try:
                 q_bit_nr = int(posted_dict['q_bits'])
@@ -71,6 +74,8 @@ def quantuk_generator():
                 control = posted_dict['control']
             except KeyError:
                 control = ""
+            print(sim_str)
+
             sim = Simulator(jsonDump=sim_str)
 
             if control == "phase":
