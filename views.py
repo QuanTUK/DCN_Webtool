@@ -208,7 +208,7 @@ def quantuk_generator():
                     angle = int(posted_dict['crxangle'])
                     c_bit = int(posted_dict['c_bit'])
                     n_bit = int(posted_dict['n_bit'])
-                    sim.cRx(c_bit, n_bit, angle)
+                    sim.cRx(angle, c_bit, n_bit)
                 except (ValueError, KeyError):
                     pass
 
@@ -217,7 +217,7 @@ def quantuk_generator():
                     angle = int(posted_dict['cryangle'])
                     c_bit = int(posted_dict['c_bit'])
                     n_bit = int(posted_dict['n_bit'])
-                    sim.cRx(c_bit, n_bit, angle)
+                    sim.cRy(angle, c_bit, n_bit)
                 except (ValueError, KeyError):
                     pass
 
@@ -226,7 +226,7 @@ def quantuk_generator():
                     angle = int(posted_dict['crzangle'])
                     c_bit = int(posted_dict['c_bit'])
                     n_bit = int(posted_dict['n_bit'])
-                    sim.cRx(c_bit, n_bit, angle)
+                    sim.cRz(angle, c_bit, n_bit)
                 except (ValueError, KeyError):
                     pass
 
@@ -257,7 +257,7 @@ def quantuk_generator():
                     not_bit = int(posted_dict['n_bit'])
                     control_bit = int(posted_dict['c_bit'])
                     angle = int(posted_dict['cangle'])
-                    sim.cPhase(control_bit, not_bit, angle)
+                    sim.cPhase(angle, control_bit, not_bit)
                 except KeyError:
                     pass
 
