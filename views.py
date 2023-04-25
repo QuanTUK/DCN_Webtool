@@ -104,7 +104,7 @@ def quantuk_generator():
                     except ValueError:
                         pass
 
-                if betrag_list != [0.0]*(2 ** q_bit_nr) and phase_list != [0.0]*(2 ** q_bit_nr):
+                if betrag_list != [0.0]*(2 ** q_bit_nr): #and phase_list != [0.0]*(2 ** q_bit_nr):
                     sim.write_magn_phase(betrag_list, phase_list)
 
 
