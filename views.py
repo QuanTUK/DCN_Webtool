@@ -225,7 +225,7 @@ def quantuk_generator():
                     if key not in dont_look_at:
                         q_bits_2_apply.append(int(key))
                 if len(q_bits_2_apply) > 0 and control_bit != -1:
-                    sim.cHad(q_bits_2_apply, control_bit)
+                    sim.cHad(control_bit, q_bits_2_apply)
 
             
             elif control == "cswap":
