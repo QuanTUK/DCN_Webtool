@@ -192,16 +192,26 @@
             <h2>Options</h2>
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" id="collapseSidebar">×</a>
 
-            <span>Number of Qubits<input type="number" name="q_bits" id="q_bit_nr" placeholder="1" min="1"
-                                         max="3" value="1"></span><br>
+            <span>Number of Qubits
+                {% if (q_bits != None) and (q_bits > 0)%}
+                <input type="number" name="q_bits" id="q_bit_nr" placeholder="{{q_bits}}"  min="1" max="3" value="">
+                {% else %}
+                <input type="number" name="q_bits" id="q_bit_nr" placeholder="1"  min="1" max="3" value="">
+                {% endif %}                          
+            </span><br>
             <!-- <label for="q_bit_nr" class="col-form-label">Number of Qubits </label> -->
 
             <!--<span><input class="form-check-input" type="checkbox" id="show_values" value="1" name="show_values">
             <label class="form-check-label" for="show_values">Show Values</label></span>-->
             <label class="form-check-label" for="show_values">Show Values</label>
-            <select id="show_values" name="show_values">
+            <select id="show_values" name="show_values" onchange="this.form.submit()">
+                {% if (show_values != None) and show_values%}
                 <option value="0">False</option>
+                <option selected="selected" value="1">True</option>
+                {% else %}
+                <option selected="selected" value="0">False</option>
                 <option value="1">True</option>
+                {% endif %}   
             </select>
             <br/>
             <input class="btn btn-primary btn-lg" type="submit" value="Reset/Set Up" name="new_simulation">
@@ -1192,30 +1202,13 @@
             setSidebarState(currentState);
             localStorage.setItem('sidebarState', currentState);
             document.getElementById("myUpperNav").style.height = "0";
-            //document.getElementById("mySidebar").style.width = "200px";
-
-              //  document.getElementById("image").style.marginLeft = "200px";
-                //document.getElementById("buttons").style.marginLeft = "200px";
-                //document.getElementById("myUpperNav").style.marginLeft = "200px";
-
-            //document.getElementById("myUpperNav").style.height = "55px";
         }
 
         function closeNav() {
-
             const currentState = 'collapsed';
             setSidebarState(currentState);
             localStorage.setItem('sidebarState', currentState);
-            //document.getElementById("mySidebar").style.width = "0";
             document.getElementById("myUpperNav").style.height = "55px";
-            // Element main may not exist
-            // {% if visualized != None %}
-             //   document.getElementById("image").style.marginLeft = "0";
-              //  document.getElementById("buttons").style.marginLeft = "0";
-              //  document.getElementById("myUpperNav").style.marginLeft = "0";
-            // {% endif %}
-            //document.getElementById("myUpperNav").style.height = "55px";
-
         }
 
 

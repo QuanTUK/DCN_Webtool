@@ -6,7 +6,8 @@
     # Project: DCN QuanTUK
 #----------------------------------------------------------------------------
 from flask import render_template, request, session
-from qc_education_package import Simulator, DimensionalCircleNotation
+# from qc_education_package import Simulator, DimensionalCircleNotation
+from localtest import *
 from flask import Flask
 
 import matplotlib
@@ -60,7 +61,7 @@ def quantuk_generator():
             for i in range(0, 2**q_bit_nr):
                 dont_look_at.append("betrag"+str(i))
                 dont_look_at.append("phase" + str(i))
-            # print(dont_look_at)
+
             try:
                 control = posted_dict['control']
             except KeyError:
@@ -299,15 +300,11 @@ def quantuk_generator():
             
 
         try:
-            print("sv", posted_dict["show_values"])
-            if posted_dict["show_values"] == "1":
-                show_values = True
-            else:
-                show_values = False
+            show_values = bool(int(posted_dict["show_values"]))
         except KeyError:
             show_values = False
-        vis = DimensionalCircleNotation(sim, show_values)
-        vis.draw()
+        vis = DimensionalCircleNotation(sim)
+        vis.showMagnPhase(show_values)
         binary_label_list = []
 
         # construct binary label list
@@ -323,7 +320,7 @@ def quantuk_generator():
                                visualized=vis.export_base64("png"),
                                visualized_pdf=vis.export_base64("pdf"),
                                visualized_svg=vis.export_base64("svg"),
-                               q_bits=q_bit_nr, simulator=str(sim), read_output=read_output,
+                               q_bits=q_bit_nr, simulator=str(sim), read_output=read_output, show_values=show_values,
                                binary_label_list=binary_label_list)
 
 @app.route('/test', methods=['GET', 'POST'])
