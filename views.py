@@ -96,11 +96,11 @@ def quantuk_generator():
                     except ValueError:
                         pass
 
-                phase_list = [0] * (2 ** q_bit_nr)
+                phase_list = [0.0] * (2 ** q_bit_nr)
                 for key in phase_keys:
                     key_pos = int(key.replace("phase", ""))
                     try:
-                        phase_list[key_pos] = int(posted_dict[key])
+                        phase_list[key_pos] = float(posted_dict[key])
                     except ValueError:
                         pass
 
