@@ -6,8 +6,8 @@
     # Project: DCN QuanTUK
 #----------------------------------------------------------------------------
 from flask import render_template, request, session
-# from qc_education_package import Simulator, DimensionalCircleNotation
-from localtest import *
+from qc_education_package import Simulator, DimensionalCircleNotation
+# from localtest import *
 from flask import Flask
 
 import matplotlib
@@ -110,10 +110,10 @@ def quantuk_generator():
 
 
             elif control == 'read':
-                q_bits_2_apply = 0
+                q_bits_2_apply = []
                 for key in posted_dict.keys():
                     if key not in dont_look_at:
-                        q_bits_2_apply = int(key)
+                        q_bits_2_apply.append(int(key))
 
                 if q_bits_2_apply == 0:
                     q_bits_2_apply = None
@@ -328,6 +328,7 @@ def test():
     return render_template("test.html")
 
 
-app.run(debug=True)
+app.run(debug=False)
+# app.run(debug=True)
 
 

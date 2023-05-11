@@ -271,7 +271,7 @@
             <div class="row">
                 <div class="col-sm">
                     {% if read_output != None %}
-                    {{read_output}}
+                    {{read_output.replace("\n", "</br>") | safe }}
                     {% endif %}
                 </div>
             </div>
