@@ -93,6 +93,8 @@
 
         /* The button used to open the sidebar */
         #myUpperNav {
+            position: relative;
+            top: -50px;
             transition: height 1s;
             transition: margin-left .5s;
             font-size: 20px;
@@ -171,13 +173,39 @@
                 /* Center the grid horizontally */
             }
         }
+                .alert {
+        padding: 20px;
+        background-color: #f44336;
+        color: white;
+        display: block;
+        text-align: center;
+        margin:auto
+        }
 
+        .closebtn {
+        margin-left: 15px;
+        color: white;
+        font-weight: bold;
+        float: right;
+        font-size: 22px;
+        line-height: 20px;
+        cursor: pointer;
+        transition: 0.3s;
+        }
+
+        .closebtn:hover {
+        color: black;
+        }
     </style>
 
     <title>DCN-Webtool</title>
 </head>
 
 <body>
+    <div class="alert">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+        <strong>Warning:</strong> This is a alpha release version, development in progress.</br> Not optimized for high loads. You may experience server errors if many people use the website at the same time.
+    </div>
 <form class="form" action="" method="POST" name="answers">
 
     <input type="hidden" name="simulator" value="{{ simulator }}"/>
@@ -1233,6 +1261,7 @@
     setSidebarState(sidebarState);
     }, 10);
 </script>
+
 
 </body>
 

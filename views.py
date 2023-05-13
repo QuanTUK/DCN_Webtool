@@ -6,8 +6,8 @@
     # Project: DCN QuanTUK
 #----------------------------------------------------------------------------
 from flask import render_template, request, session
-from qc_education_package import Simulator, DimensionalCircleNotation
-# from localtest import *
+# from qc_education_package import Simulator, DimensionalCircleNotation
+from localtest import *
 from flask import Flask
 
 import matplotlib
