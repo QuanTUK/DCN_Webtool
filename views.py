@@ -10,13 +10,12 @@ from qc_education_package import Simulator, DimensionalCircleNotation
 # from localtest import *
 from flask import Flask
 
+# Use non gui/interactive pyplot backend
 import matplotlib
 matplotlib.use('agg')
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf'
-
-# configuration = get_config()
+app.config.from_object('config')
 
 
 # ********************************* Open pages views ***************************************************

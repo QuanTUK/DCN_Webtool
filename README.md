@@ -15,5 +15,9 @@ This repository includes all the relevant code to create the DCN Webtool. With i
 
 To use the tool, just install all files in the requirements.txt. It is compatible with Python 3.10 and should also work on other Versions.
 
+First run the ```create_secret.sh``` bash script to create a new secret key for the webapp. This will generate a key inside a ```config.py``` file.
+Do not publish the config file nor the key anywhere as of security concerns.
+
+
 After installation is complete run views.py.
 A local website will be created at http://127.0.0.1:5000.
