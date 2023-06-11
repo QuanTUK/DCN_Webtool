@@ -1,0 +1,50 @@
+<div class="sidenav" id="mySidebar">
+    <div class="container">
+        <h2>Options</h2>
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" id="collapseSidebar">×</a>
+
+        <span>Number of Qubits
+            {% if (q_bits != None) and (q_bits > 0)%}
+            <input type="number" name="q_bits" id="q_bit_nr" placeholder="{{q_bits}}" min="1" max="3"
+                value="">
+            {% else %}
+            <input type="number" name="q_bits" id="q_bit_nr" placeholder="1" min="1" max="3" value="">
+            {% endif %}
+        </span><br>
+        <label class="form-check-label" for="show_values">Show Values</label>
+        <select id="show_values" name="show_values" onchange="this.form.submit()">
+            {% if (show_values != None) and show_values%}
+            <option value="0">False</option>
+            <option selected="selected" value="1">True</option>
+            {% else %}
+            <option selected="selected" value="0">False</option>
+            <option value="1">True</option>
+            {% endif %}
+        </select>
+        <br />
+        <!-- Hier weitermachen! -->
+        <label class="form-check-label" for="visualization_method">Visualizer</label>
+        <select id="visualization_method" name="visualization_method" onchange="this.form.submit()">
+            {% if (visualization_method != None) and visualization_method == 'CN' %}
+            <option value="DCN">DCN</option>
+            <option selected="selected" value="CN">CN</option>
+            {% else %}
+            <option selected="selected" value="DCN">DCN</option>
+            <option value="CN">CN</option>
+            {% endif %}
+        </select>
+        <br />
+        
+        <input class="btn btn-primary btn-lg" type="submit" value="Reset/Set Up" name="new_simulation">
+
+        {% include 'includes/download_btns.html' %}
+    </div>
+</div>
+
+
+<div class="uppernav" id="myUpperNav">
+    <div class="container">
+        <a href="javascript:void(0)" class="openbtn" onclick="openNav()" id="toggleSidebar">☰ Open
+            Sidebar</a>
+    </div>
+</div>

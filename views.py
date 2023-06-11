@@ -7,7 +7,6 @@
 #----------------------------------------------------------------------------
 from flask import render_template, request, session
 from qc_education_package import Simulator, DimensionalCircleNotation
-# from localtest import *
 from flask import Flask
 
 # Use non gui/interactive pyplot backend
@@ -52,7 +51,7 @@ def quantuk_generator():
 
             dont_look_at = ['csrf_token', 'simulator', 'q_bits', 'columns', 'control', 'notbit', 'cbit', 'angle',
                             'write', 'write_bit', 'write_complex', 'radio', 'read', 'c_bit', 'n_bit', 'cangle',
-                            'rxangle', 'ryangle', 'rzangle', 'crxangle', 'cryangle', 'crzangle', 'show_values']
+                            'rxangle', 'ryangle', 'rzangle', 'crxangle', 'cryangle', 'crzangle', 'show_values', 'visualization_method']
             sim_str = posted_dict['simulator']
 
             q_bit_nr = session['q_bits_nr_cookie']
@@ -297,16 +296,29 @@ def quantuk_generator():
                 except (ValueError, KeyError):
                     pass
             
+        # Select Visualizer values?
+        try:
+            visName = posted_dict["visualization_method"]
+        except KeyError:
+            visName = 'DCN'
 
+        if visName == 'DCN':
+            vis = DimensionalCircleNotation(sim)
+        elif visName == 'CN':
+            vis = CircleNotation(sim)
+        else:
+            raise Exception(f'Wrong value: No such visualizer in views.py: {posted_dict}')
+
+        # Show values?
         try:
             show_values = bool(int(posted_dict["show_values"]))
         except KeyError:
             show_values = False
-        vis = DimensionalCircleNotation(sim)
         vis.showMagnPhase(show_values)
-        binary_label_list = []
-
+        
+        
         # construct binary label list
+        binary_label_list = []
         max_len = len(format(2**q_bit_nr-1, 'b'))
         for i in range(0, 2**q_bit_nr):
             binary = format(i, 'b')
@@ -319,15 +331,5 @@ def quantuk_generator():
                                visualized=vis.export_base64("png"),
                                visualized_pdf=vis.export_base64("pdf"),
                                visualized_svg=vis.export_base64("svg"),
-                               q_bits=q_bit_nr, simulator=str(sim), read_output=read_output, show_values=show_values,
+                               q_bits=q_bit_nr, simulator=str(sim), read_output=read_output, show_values=show_values, visualization_method=visName,
                                binary_label_list=binary_label_list)
-
-@app.route('/test', methods=['GET', 'POST'])
-def test():
-    return render_template("test.html")
-
-
-app.run(debug=False)
-# app.run(debug=True)
-
-

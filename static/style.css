@@ -1,0 +1,182 @@
+input[type="number"] {
+    width: 150px;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+.sidenav {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    background-color: lightgray;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.sidenav a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 18px;
+    color: black;
+    display: block;
+}
+
+.sidenav a:hover {
+    color: #2c58fe;
+}
+
+.sidenav.collapsed {
+    transform: translateX(-100%);
+}
+
+#github {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+}
+
+.download-btns {
+    margin-top: 20px;
+}
+
+.uppernav {
+    margin: 0 auto;
+    margin-left: 200px;
+    height: 0;
+    position: absolute;
+    top: 0;
+    overflow-x: hidden;
+    /* padding-top: 20px; */
+}
+
+.uppernav a {
+    text-decoration: none;
+    font-size: 25px;
+    color: black;
+}
+
+.uppernav a:hover {
+    color: #2c58fe;
+}
+
+.uppernav .openbtn {
+    font-size: 36px;
+}
+
+/* The button used to open the sidebar */
+#myUpperNav {
+    position: relative;
+    top: -50px;
+    transition: height 1s;
+    transition: margin-left .5s;
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+    border: none;
+    z-index: 1;
+    overflow-x: hidden;
+}
+
+.main {
+    margin: 0 auto;
+    margin-left: 200px;
+    /* Center horizontally */
+    /* Same as the width of the sidenav */
+    padding: 0px 0;
+}
+
+#image {
+    transition: margin-left .5s;
+}
+
+#buttons {
+    transition: margin-left .5s;
+}
+
+/* Set up the grid container */
+.grid-container {
+    display: grid;
+    grid-template-columns: 14% 14% 14% 14% 14% 14% 14%;
+    grid-gap: 10px;
+    /* Set the space between grid items */
+    width: 100%;
+    max-width: 900px;
+    /* Set a maximum width for the grid */
+    margin: 0 auto;
+    /* Center the grid horizontally */
+}
+
+/* Style the buttons */
+.grid-item {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+}
+
+/* Add some hover effect for the buttons */
+.grid-item:hover {
+    background-color: #0056b3;
+}
+
+.white-box {
+    background-color: white;
+    pointer-events: none;
+}
+
+@media screen and (max-width: 500px) {
+    .sidenav {
+        padding-top: 0px;
+        width: 100%;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: 30% 30% 30%;
+        grid-gap: 10px;
+        /* Set the space between grid items */
+        width: 100%;
+
+        /* Set a maximum width for the grid */
+        margin: 0 auto;
+        /* Center the grid horizontally */
+    }
+}
+
+.alert {
+    padding: 20px;
+    background-color: #f44336;
+    color: white;
+    display: block;
+    text-align: center;
+    margin: auto
+}
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: black;
+}
