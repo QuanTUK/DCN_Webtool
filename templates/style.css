@@ -97,6 +97,7 @@ input[type="number"] {
 
 #image {
     transition: margin-left .5s;
+    /* width: 50%; */
 }
 
 #buttons {

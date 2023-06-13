@@ -1,15 +1,15 @@
-<button type="button" class="grid-item" data-toggle="modal" data-target="#ccnot"
+<button type="button" class="grid-item" data-toggle="modal" data-target="#cZ"
     style="background-color: #2c58fe; border-color: #2c58fe">
-    <img src="{{ url_for('static', filename='quantuk/Toffoli_gate.svg') }}" width="25" /><span
-        style="margin-left: 10px;">ccNot</span>
+    <img src="{{ url_for('static', filename='quantuk/Qcircuit_Z.svg') }}" width="25" /><span
+        style="margin-left: 10px;">cZ</span>
 </button>
-<div class="modal fade" id="ccnot" data-backdrop="static" data-keyboard="false" tabindex="-1"
-    aria-labelledby="ccnotLabel" aria-hidden="true">
+<div class="modal fade" id="cZ" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="cZLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="ccnotLabel">Apply ccNot to Qubit <img
-                        src="{{ url_for('static', filename='quantuk/Toffoli_gate.svg') }}" width="50" /></h5>
+                <h5 class="modal-title" id="cZLabel">Apply cZ to Qubit <img
+                        src="{{ url_for('static', filename='quantuk/Qcircuit_Z.svg') }}" width="50" /></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -37,7 +37,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss
                 </button>
-                <button class="btn btn-default btn-success" type="submit" name="control" value="ccnot">
+                <button class="btn btn-default btn-success" type="submit" name="control" value="cZ">
                     Apply
                 </button>
             </div>

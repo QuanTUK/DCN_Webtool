@@ -6,7 +6,9 @@
     # Project: DCN QuanTUK
 #----------------------------------------------------------------------------
 from flask import render_template, request, session
-from qc_education_package import Simulator, DimensionalCircleNotation
+# from qc_education_package import Simulator, DimensionalCircleNotation
+
+from localtest import *
 from flask import Flask
 
 # Use non gui/interactive pyplot backend
@@ -127,13 +129,46 @@ def quantuk_generator():
                 sim.setGlobalPhase0()
 
 
-            elif control == "qnot":
+            elif control == "qnot" or control == "x":
                 q_bits_2_apply = []
                 for key in posted_dict.keys():
                     if key not in dont_look_at:
                         q_bits_2_apply.append(int(key))
                 if len(q_bits_2_apply) > 0:
                     sim.qnot(q_bits_2_apply)
+            
+            elif control == "y":
+                q_bits_2_apply = []
+                for key in posted_dict.keys():
+                    if key not in dont_look_at:
+                        q_bits_2_apply.append(int(key))
+                if len(q_bits_2_apply) > 0:
+                    sim.y(q_bits_2_apply)
+
+            elif control == "z":
+                q_bits_2_apply = []
+                for key in posted_dict.keys():
+                    if key not in dont_look_at:
+                        q_bits_2_apply.append(int(key))
+                if len(q_bits_2_apply) > 0:
+                    sim.z(q_bits_2_apply)
+
+            elif control == "rootX":
+                q_bits_2_apply = []
+                for key in posted_dict.keys():
+                    if key not in dont_look_at:
+                        q_bits_2_apply.append(int(key))
+                if len(q_bits_2_apply) > 0:
+                    sim.rootX(q_bits_2_apply)
+            
+            elif control == "rootZ":
+                q_bits_2_apply = []
+                for key in posted_dict.keys():
+                    if key not in dont_look_at:
+                        q_bits_2_apply.append(int(key))
+                if len(q_bits_2_apply) > 0:
+                    sim.rootZ(q_bits_2_apply)
+
 
 
             elif control == "had":
