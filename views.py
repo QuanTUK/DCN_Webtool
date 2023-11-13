@@ -252,15 +252,17 @@ def quantuk_generator():
             elif control == "chad":
                 control_bits = []
                 try:
-                    control_bit = int(posted_dict['control_bit'])
+                    target_bit = int(posted_dict['target_bit'])
                 except KeyError:
                     control_bit = -1
-                for key in posted_dict.keys():
-                    if key not in dont_look_at:
-                        control_bits.append(int(key))
-                print("chad ", control_bit, control_bits)
-                if len(control_bits) > 0 and control_bit != -1:
-                    sim.cHad(control_bit, control_bits)
+                for key, val in posted_dict.items():
+                    if key.startswith('control_bit'):
+                        control_bits.append(int(val))
+                    # if key not in dont_look_at:
+                    #     control_bits.append(int(key))
+                print("chad ", target_bit, control_bits)
+                if len(control_bits) > 0 and target_bit != -1:
+                    sim.cHad(control_bits, target_bit)
 
             
             elif control == "cswap":
