@@ -258,6 +258,7 @@ def quantuk_generator():
                 for key in posted_dict.keys():
                     if key not in dont_look_at:
                         control_bits.append(int(key))
+                print("chad ", control_bit, control_bits)
                 if len(control_bits) > 0 and control_bit != -1:
                     sim.cHad(control_bit, control_bits)
 
