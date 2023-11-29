@@ -1,3 +1,8 @@
-venv/
+.venv/
+*venv*
 .vscode
+__pycache__/
 config.py
+localtest.py
+.*
+*log
