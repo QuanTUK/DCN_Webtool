@@ -6,7 +6,7 @@
     # Project: DCN QuanTUK
 #----------------------------------------------------------------------------
 from flask import render_template, request, session
-from qc_education_package import Simulator, DimensionalCircleNotation
+from qc_education_package import Simulator, DimensionalCircleNotation, CircleNotation
 
 from flask import Flask
 
@@ -343,8 +343,10 @@ def quantuk_generator():
 
         if visName == 'DCN':
             vis = DimensionalCircleNotation(sim)
+            print("DimensionalCircleNotation")
         elif visName == 'CN':
             vis = CircleNotation(sim)
+            print("CircleNotation")
         else:
             raise Exception(f'Wrong value: No such visualizer in views.py: {posted_dict}')
 
