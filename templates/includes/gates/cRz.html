@@ -3,7 +3,7 @@
     <img src="{{ url_for('static', filename='quantuk/CRZtheta.svg') }}" width="25" /><span
         style="margin-left: 10px;">cRz</span>
 </button>
-<div class="modal fade" id="crz" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="crzLabel"
+<div class="modal fade" id="angle" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="crzLabel"
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -19,27 +19,27 @@
                 <h3>Control Bit</h3>
                 {% for nr in range(1, q_bits+1) %}
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" id="{{nr}}" value="{{nr}}" name="control_bit">
+                    <input class="form-check-input" type="radio" id="{{nr}}" value="{{nr}}" name="control__bit_{{nr}}">
                     <label class="form-check-label" for="{{nr}}">{{nr}}</label>
                 </div>
                 {% endfor %}
                 <h3>Target-Bit</h3>
                 {% for nr in range(1, q_bits+1) %}
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" id="n{{nr}}" value="{{nr}}" name="target_bit">
+                    <input class="form-check-input" type="radio" id="n{{nr}}" value="{{nr}}" name="target_bit_{{nr}}">
                     <label class="form-check-label" for="{{nr}}">{{nr}}</label>
                 </div>
                 {% endfor %}
                 <div class="col-sm">
-                    <label class="form-check-label" for="crzangle">Angle in Degree</label>
-                    <input type="number" id="crzangle" name="crzangle" min="0">
+                    <label class="form-check-label" for="angle">Angle in Degree</label>
+                    <input type="number" id="angle" name="angle" >
 
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss
                 </button>
-                <button class="btn btn-default btn-success" type="submit" name="control" value="CRz">
+                <button class="btn btn-default btn-success" type="submit" name="control" value="crz">
                     Apply
                 </button>
             </div>

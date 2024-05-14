@@ -82,10 +82,13 @@
                         {% include 'includes/gates/not.html' %}
                         {% include 'includes/gates/had.html' %}
                         {% include 'includes/gates/swap.html' %}
-                        {% include 'includes/gates/phase.html' %}
+                        <!-- {% include 'includes/gates/phase.html' %} -->
+                        {% with gate_name='phase' %}
+                            {% include "includes/gates/phase.html" %}
+                        {% endwith %}
                         {% include 'includes/gates/rx.html' %}
-                        {% include 'includes/gates/ry.html' %}
-                        {% include 'includes/gates/rz.html' %}
+                        <!-- {% include 'includes/gates/ry.html' %}
+                        {% include 'includes/gates/rz.html' %} -->
 
                         {% include 'includes/gates/cNot.html' %}
                         {% include 'includes/gates/cHad.html' %}

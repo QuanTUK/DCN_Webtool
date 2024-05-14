@@ -1,38 +1,35 @@
-<button type="button" class="grid-item" data-toggle="modal" data-target="#phase"
+<button type="button" class="grid-item" data-toggle="modal" data-target="#{{gate_name}}"
     style="background-color: #507289; border-color: #507289">
     <img src="{{ url_for('static', filename='quantuk/Qcircuit_Pphi.svg') }}" width="25" /><span
-        style="margin-left: 10px;">Phase</span>
+        style="margin-left: 10px;">{{gate_name}}</span>
 </button>
-<div class="modal fade" id="phase" data-backdrop="static" data-keyboard="false" tabindex="-1"
-    aria-labelledby="phaseLabel" aria-hidden="true">
+<div class="modal fade" id="{{gate_name}}" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="{{gate_name}}modallabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="phaseLabel">Apply Phase to Qubit <img
-                        src="{{ url_for('static', filename='quantuk/Qcircuit_Pphi.svg') }}" width="75" /></h5>
+                <h5 class="modal-title" id="{{gate_name}}modallabel">Apply {{gate_name}} to Qubit <img
+                    # TODO: Successfully join these string for filename, rename svg files to match pattern    
+                    src="{{ url_for('static', filename=(gate_name+'.svg')) }}" width="75" /></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="col-sm">
                     {% for nr in range(1, q_bits+1) %}
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="{{nr}}" value="{{nr}}" name="{{nr}}">
-                        <label class="form-check-label" for="{{nr}}">{{nr}}</label>
+                        <input class="form-check-input" type="checkbox" id="target_bit_{{nr}}" value="{{nr}}"
+                            name="target_bit_{{nr}}">
+                        <label class="form-check-label" for="target_bit_{{nr}}">{{nr}}</label>
                     </div>
-                    {% endfor %}
-                </div>
-                <div class="col-sm">
-                    <label class="form-check-label" for="phaseangle">Angle in Degree</label>
-                    <input type="number" id="phaseangle" name="angle" min="0">
-
-                </div>
+                        {% endfor %}
+                            <label class="form-check-label" for="angle">Angle in Degree</label>
+                            <input class="form-check-input" type="number" id="angle" name="angle" value="0">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss
                 </button>
-                <button class="btn btn-default btn-success" type="submit" name="control" value="phase">
+                <button class="btn btn-default btn-success" type="submit" name="control" value="{{gate_name}}">
                     Apply
                 </button>
             </div>
