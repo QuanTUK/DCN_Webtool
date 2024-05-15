@@ -18,7 +18,7 @@
         {% include 'style.css' %}
     </style>
 
-    <link rel="icon" href="{{ url_for('static', filename='quantuk/CNOT_gate.svg') }}">
+    <link rel="icon" href="{{ url_for('static', filename='gate_icons/cnot.svg') }}">
 
     <title>DCN-Webtool</title>
 
@@ -65,40 +65,75 @@
                     <div class="grid-container">
                         {% include 'includes/gates/write_int.html' %}
                         {% include 'includes/gates/write_complex.html' %}
-                        {% include 'includes/gates/read.html' %}
+                        <!-- Use general template for all simple gates -> the one where target qubits have to be selected -->
+                        {% with gate_name='read' %}
+                            {% include "includes/gates/gate.html" %}
+                        {% endwith %}
                         <div class="grid-item white-box"></div>
                         {% include 'includes/gates/check_seperability.html' %}
                         <div class="grid-item white-box"></div>
                         {% include 'includes/gates/set_global_phase_0.html' %}
 
-                        {% include 'includes/gates/rootX.html' %}   
+                        {% with gate_name='x' %}
+                            {% include "includes/gates/gate.html" %}
+                        {% endwith %}
                         <div class="grid-item white-box"></div>
-                        {% include 'includes/gates/y.html' %} 
+                        {% with gate_name='y' %}
+                            {% include "includes/gates/gate.html" %}
+                        {% endwith %}
                         <div class="grid-item white-box"></div>   
-                        {% include 'includes/gates/z.html' %}   
-                        {% include 'includes/gates/rootZ.html' %}
-                        {% include 'includes/gates/cZ.html' %}  
-
-                        {% include 'includes/gates/not.html' %}
-                        {% include 'includes/gates/had.html' %}
+                        {% with gate_name='z' %}
+                            {% include "includes/gates/gate.html" %}
+                        {% endwith %}
+                        {% with gate_name='rootz' %}
+                            {% include "includes/gates/gate.html" %}
+                        {% endwith %}
+                        <!-- Use general template for all phase gates -> where qubits have to be selected and one angle is needed-->
+                        {% with gate_name='cz' %}
+                            {% include "includes/gates/controlled_gate.html" %}
+                        {% endwith %}
+                        {% with gate_name='rootx' %}
+                            {% include "includes/gates/gate.html" %}
+                        {% endwith %}
+                        {% with gate_name='had' %}
+                            {% include "includes/gates/gate.html" %}
+                        {% endwith %}
                         {% include 'includes/gates/swap.html' %}
-                        <!-- {% include 'includes/gates/phase.html' %} -->
+                        <!-- Use general template for all phase gates -> where qubits have to be selected and one angle is needed-->
                         {% with gate_name='phase' %}
                             {% include "includes/gates/phase.html" %}
                         {% endwith %}
-                        {% include 'includes/gates/rx.html' %}
-                        <!-- {% include 'includes/gates/ry.html' %}
-                        {% include 'includes/gates/rz.html' %} -->
-
-                        {% include 'includes/gates/cNot.html' %}
-                        {% include 'includes/gates/cHad.html' %}
+                        {% with gate_name='rx' %}
+                            {% include "includes/gates/phase.html" %}
+                        {% endwith %}
+                        {% with gate_name='ry' %}
+                            {% include "includes/gates/phase.html" %}
+                        {% endwith %}
+                        {% with gate_name='rz' %}
+                            {% include "includes/gates/phase.html" %}
+                        {% endwith %}
+                        <!-- Use templates for all simple controlled gates  -->
+                        {% with gate_name='cnot' %}
+                            {% include "includes/gates/controlled_gate.html" %}
+                        {% endwith %}
+                        {% with gate_name='chad' %}
+                            {% include "includes/gates/controlled_gate.html" %}
+                        {% endwith %}
                         {% include 'includes/gates/cSwap.html' %}
-                        {% include 'includes/gates/cPhase.html' %}
-                        {% include 'includes/gates/cRx.html' %}
-                        {% include 'includes/gates/cRy.html' %}
-                        {% include 'includes/gates/cRz.html' %}
+                        <!-- Use templates for all simple controlled phase gates  -->
+                        {% with gate_name='cphase' %}
+                            {% include "includes/gates/controlled_phase.html" %}
+                        {% endwith %}
+                        {% with gate_name='crx' %}
+                            {% include "includes/gates/controlled_phase.html" %}
+                        {% endwith %}
 
-                        {% include 'includes/gates/ccNot.html' %}
+                        {% with gate_name='cry' %}
+                            {% include "includes/gates/controlled_phase.html" %}
+                        {% endwith %}
+                        {% with gate_name='crz' %}
+                            {% include "includes/gates/controlled_phase.html" %}
+                        {% endwith %}
                     </div>
                 </div>
                 {% endif %}
