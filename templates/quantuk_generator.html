@@ -9,21 +9,15 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
-    <style>
-        {% include 'style.css' %}
-    </style>
-
-    <link rel="icon" href="{{ url_for('static', filename='gate_icons/cnot.svg') }}">
-
     <title>DCN-Webtool</title>
 
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='gate_icons/cnot.svg') }}">
 </head>
-
 <body>
     {% include 'includes/wip_alert.html' %}
 
@@ -65,10 +59,8 @@
                     <div class="grid-container">
                         {% include 'includes/gates/write_int.html' %}
                         {% include 'includes/gates/write_complex.html' %}
+                        {% include "includes/gates/read.html" %}
                         <!-- Use general template for all simple gates -> the one where target qubits have to be selected -->
-                        {% with gate_name='read' %}
-                            {% include "includes/gates/gate.html" %}
-                        {% endwith %}
                         <div class="grid-item white-box"></div>
                         {% include 'includes/gates/check_seperability.html' %}
                         <div class="grid-item white-box"></div>

@@ -1,14 +1,14 @@
 <button type="button" class="grid-item" data-toggle="modal" data-target="#{{gate_name}}modal"
     style="background-color: #507289; border-color: #507289">
     <img src="{{ url_for('static', filename='gate_icons/' ~ gate_name ~ '.svg') }}" width="25" stroke="black"
-    stroke-width="100" /><span style="margin-left: 10px;">{{gate_name}}</span>
+    stroke-width="100" /><span style="margin-left: 10px;">{{FormattedGateNames[gate_name]}}</span>
 </button>
 <div class="modal fade" id="{{gate_name}}modal" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="{{gate_name}}modalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="{{gate_name}}modalLabel">Apply {{gate_name}} to Qubit <img
+                <h5 class="modal-title" id="{{gate_name}}modalLabel">Apply {{FormattedGateNames[gate_name]}} to Qubit <img
                     src="{{ url_for('static', filename='gate_icons/' ~ gate_name ~ '.svg') }}" width="75" /></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

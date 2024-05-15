@@ -19,11 +19,11 @@
 
                     <div class="col-sm">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="read" value="{{nr}}" name="target_bit_{{nr}}">
+                            <input class="form-check-input" type="checkbox" id="target_bit_{{nr}}" value="{{nr}}" name="target_bit_{{nr}}">
                             {% if nr == 0 %}
-                            <label class="form-check-label" for="read">All</label>
+                            <label class="form-check-label" for="target_bit_{{nr}}">All</label>
                             {% else %}
-                            <label class="form-check-label" for="read">{{nr}}</label>
+                            <label class="form-check-label" for="target_bit_{{nr}}">{{nr}}</label>
                             {% endif %}
                         </div>
                     </div>
