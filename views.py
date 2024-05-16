@@ -18,7 +18,6 @@ app.config.from_object('config')
 
 # ********************************* Open pages views ***************************************************
 @app.route('/', methods=['GET', 'POST'])
-
 def quantuk_generator():
     read_output = None
     if request.method == "GET":
@@ -76,8 +75,11 @@ def quantuk_generator():
                     if key.startswith('control_bit'):
                         control_bits.append(int(val))
             # Angle parameter for phase gates
-            if 'angle' in posted_dict.keys() and posted_dict['angle'] != '':
-                angle = int(posted_dict['angle'])
+            # Only search the suitable angle for the gate
+            # Currently all forms in modals are submitted each time, hence the angles of the phase gates need a unique key/name...
+            angle_key = f'{control}_angle'
+            if angle_key in posted_dict.keys() and posted_dict[angle_key] != '':
+                angle = int(posted_dict[angle_key])
             else :
                 angle = 0
             
@@ -144,7 +146,6 @@ def quantuk_generator():
                     sim.swap(target_bits[0], target_bits[1])
 
             elif control == "phase":
-                print(type(target_bits))
                 sim.phase(angle, target_bits)
             
             elif control == 'rx':
@@ -218,4 +219,3 @@ def quantuk_generator():
                                q_bits=q_bit_nr, simulator=sim.toJson(), read_output=read_output, show_values=show_values, visualization_method=visName,
                                binary_label_list=binary_label_list, FormattedGateNames=FormattedGateNames)
 
-        
