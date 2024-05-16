@@ -1,7 +1,7 @@
 <button type="button" class="grid-item" data-toggle="modal" data-target="#{{gate_name}}modal"
-    style="background-color: #507289; border-color: #507289">
+    style="background-color: #2c58fe; border-color: #2c58fe">
     <img src="{{ url_for('static', filename='gate_icons/' ~ gate_name ~ '.svg') }}" width="25" stroke="black"
-    stroke-width="100" /><span style="margin-left: 10px;">{{FormattedGateNames[gate_name]}}</span>
+        stroke-width="100" /><span style="margin-left: 10px;">{{FormattedGateNames[gate_name]}}</span>
 </button>
 <div class="modal fade" id="{{gate_name}}modal" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="{{gate_name}}modalLabel" aria-hidden="true">
@@ -15,14 +15,20 @@
                 </button>
             </div>
             <div class="modal-body">
-                <h3> Target Bit</h3>
-                <p>If none is selected the gate will be applied to all Qubits by default</p>
-                {% for nr in range(1, q_bits+1) %}
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="target_bit_{{nr}}" value="{{nr}}" name="target_bit_{{nr}}">
-                    <label class="form-check-label" for="target_bit_{{nr}}">{{nr}}</label>
-                </div>
-                {% endfor %}
+                    <h3> Control Bits</h3>
+                    {% for nr in range(1, q_bits+1) %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="control_bit_{{nr}}" value="{{nr}}" name="control_bit_{{nr}}">
+                        <label class="form-check-label" for="control_bit_{{nr}}">{{nr}}</label>
+                    </div>
+                    {% endfor %}
+                    <h3> Target Bit</h3>
+                    {% for nr in range(1, q_bits+1) %}
+                    <div class="form-radio">
+                        <input class="form-radio-input" type="radio" id="target_bit_{{nr}}" value="{{nr}}" name="target_bit_{{nr}}">
+                        <label class="form-check-label" for="target_bit_{{nr}}">{{nr}}</label>
+                    </div>
+                    {% endfor %}
             </div>
             <div class="modal-footer">
                <div class="container">
@@ -59,7 +65,8 @@
                         </div>
                     </div>
                   </div>
-            </div>
+                  </div>
+
         </div>
     </div>
 </div>
