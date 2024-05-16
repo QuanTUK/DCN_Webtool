@@ -15,7 +15,6 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="col-sm">
                     <h3> Control Bits</h3>
                     {% for nr in range(1, q_bits+1) %}
                     <div class="form-check">
@@ -23,8 +22,6 @@
                         <label class="form-check-label" for="control_bit_{{nr}}">{{nr}}</label>
                     </div>
                     {% endfor %}
-                </div>
-                <div class="col-sm">
                     <h3> Target Bit</h3>
                     {% for nr in range(1, q_bits+1) %}
                     <div class="form-radio">
@@ -32,20 +29,44 @@
                         <label class="form-check-label" for="target_bit_{{nr}}">{{nr}}</label>
                     </div>
                     {% endfor %}
-                </div>
-                <div class="col-sm">
-                    <label class="form-check-label" for="angle">Angle in Degree</label>
-                    <input type="number" id="angle" name="angle" >
-
-                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss
-                </button>
-                <button class="btn btn-default btn-success" type="submit" name="control" value="{{gate_name}}">
-                    Apply
-                </button>
-            </div>
+               <div class="container">
+                    <div class="row">
+                        <p>Click a one of these buttons to apply  {{FormattedGateNames[gate_name]}} with a predefined angle:</p> 
+                    </div>
+                    <div class="row">
+                        <div class="form-check col-sm">
+                            <button type="button" class="btn btn-default preset-btn" name="{{gate_name}}" data-target="#{{gate_name}}" value="90">90 deg</button>
+                        </div>
+                        <div class="form-check col-sm">
+                            <button type="button" class="btn btn-default preset-btn" name="{{gate_name}}" data-target="#{{gate_name}}" value="180">180 deg</button>
+                        </div>
+                        <div class="form-check col-sm">
+                            <button type="button" class="btn btn-default preset-btn" name="{{gate_name}}" data-target="#{{gate_name}}" value="270">270 deg</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <p></p>
+                        <!-- Some hacky vertical whitespace -->
+                    </div>
+                    <div class="row">
+                        <p>Use this button to apply  {{FormattedGateNames[gate_name]}} with a costum angle:</p> 
+                    </div>
+                    <div class="row">
+                        <div class="form-group form-inline">
+                            <div class="form-check col-sm">
+                                <input class="form-check-input" type="number" id="{{gate_name}}_angle" name="{{gate_name}}_angle" value="0">
+                                <label class="form-check-label" for="{{gate_name}}_angle">deg</label>
+                            </div>
+                            <div class="form-check col-sm">
+                                <button class="btn btn-default btn-success" type="submit" id="{{gate_name}}_submit" name="control" value="{{gate_name}}">Apply</button>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  </div>
+
         </div>
     </div>
 </div>

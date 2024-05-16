@@ -15,24 +15,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
-     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='gate_icons/cnot.svg') }}">
 </head>
 <body>
     {% include 'includes/wip_alert.html' %}
 
-    <form class="form" action="" method="POST" name="answers">
-
+    <!-- TODO: Make smaller forms and submit main form and small forms together? Does this work? https://stackoverflow.com/questions/7843355/submit-two-forms-with-one-button-->
+    <form class="form" action="" method="POST" name="answers" id="main-form">
         <input type="hidden" name="simulator" value="{{ simulator }}" />
         <h5 class="text" id="packet_title"><u>{{packet_title}}</u></h5>
         <br>
         <h4 class="text" id="rat_question">{{rat_question}}</h4>
-        <br />
-
+        <br>
         <div class="container">
-
             {% include 'includes/sidebar.html' %}
-
             <div class="main-content">
                 {% if visualized != None %}
                 <div class="container">
@@ -52,7 +49,6 @@
                         <br>
                     </div>
                 </div>
-
             </div>
             <div class="container">
                 <div class="main" id="buttons">
@@ -134,10 +130,9 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
+    <!-- This is for the sidebar and wip warning -->
     <script>
         function openNav() {
             const currentState = 'expanded';
@@ -169,7 +164,6 @@
                 sidebar.classList.remove('collapsed');
                 document.getElementById("myUpperNav").style.height = "0";
             }
-
             // Store the current state in localStorage
             localStorage.setItem('sidebarState', state);
         }
@@ -180,6 +174,22 @@
         }, 10);
     </script>
 
+    <!-- This is for the preset buttons of the phase gate modals -->
+    <script>
+        document.querySelectorAll('.preset-btn').forEach(function(button) {
+          button.addEventListener('click', function(event) {
+            var baseId = event.target.getAttribute('data-target');
+            var targetInput = document.querySelector(baseId + '_angle');
+            var submitButton = document.querySelector(baseId + '_submit');
+            if (targetInput && submitButton) {
+              targetInput.value = event.target.value;
+              submitButton.click();
+            }
+          });
+        });
+      </script>
+
+      
 
 </body>
 

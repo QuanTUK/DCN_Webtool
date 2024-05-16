@@ -15,6 +15,8 @@
                 </button>
             </div>
             <div class="modal-body">
+                <h3> Target Bit</h3>
+                <p>If none is selected the gate will be applied to all Qubits by default</p>
                 {% for nr in range(1, q_bits+1) %}
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="target_bit_{{nr}}" value="{{nr}}"name="target_bit_{{nr}}">
@@ -23,11 +25,8 @@
                 {% endfor %}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss
-                </button>
-                <button class="btn btn-default btn-success" type="submit" name="control" value="{{gate_name}}">
-                    Apply
-                </button>
+                <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button> -->
+                <button class="btn btn-default btn-success" type="submit" name="control" value="{{gate_name}}">Apply</button>
             </div>
         </div>
     </div>
