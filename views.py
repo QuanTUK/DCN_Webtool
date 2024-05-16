@@ -5,10 +5,9 @@
     # Created: March 2023
     # Project: DCN QuanTUK
 #----------------------------------------------------------------------------
-from flask import render_template, request, session
-from qc_education_package import Simulator, DimensionalCircleNotation, CircleNotation
+from flask import Flask, render_template, request, session
+from qc_education_package import Simulator
 
-from flask import Flask
 
 # Use non gui/interactive pyplot backend
 import matplotlib
@@ -17,26 +16,33 @@ matplotlib.use('agg')
 app = Flask(__name__)
 app.config.from_object('config')
 
-
 # ********************************* Open pages views ***************************************************
-
-
 @app.route('/', methods=['GET', 'POST'])
-# @log_access
 def quantuk_generator():
     read_output = None
     if request.method == "GET":
-
-        return render_template("quantuk_generator.html", # user=current_user,
-                               visualized=None, q_bits=0, simulator=None, binary_label_list=[])
-
+        return render_template("quantuk_generator.html", visualized=None, q_bits=0, simulator=None, binary_label_list=[])
     else:
         posted_dict = request.form.to_dict()
-        print(posted_dict)
+        print(f"\nPosted dict: {posted_dict}\n")
+
+        # Select Visualizer values?
+        try:
+            visName = posted_dict["visualization_method"]
+        except KeyError:
+            visName = 'DCN'
+
+        # Only import chosen visualizer
+        if visName == 'DCN':
+            from qc_education_package import DimensionalCircleNotation as Visualizer
+        elif visName == 'CN':
+            from qc_education_package import CircleNotation as Visualizer
+        else:
+            raise Exception(f'Wrong value: No such visualizer in views.py: {posted_dict}')
 
         new_simulation = 'new_simulation' in posted_dict or 'simulator' in posted_dict and posted_dict['simulator'] == 'None'
-
         if new_simulation:
+            # new state has to be created
             try:
                 q_bit_nr = int(posted_dict['q_bits'])
             except ValueError:
@@ -45,311 +51,145 @@ def quantuk_generator():
                 except KeyError:
                     q_bit_nr = 1
 
-            sim = Simulator(q_bit_nr)
             session['q_bits_nr_cookie'] = q_bit_nr
-
+            sim = Simulator(q_bit_nr)
         else:
-
-            dont_look_at = ['csrf_token', 'simulator', 'q_bits', 'columns', 'control', 'notbit', 'cbit', 'angle',
-                            'write', 'write_bit', 'write_complex', 'radio', 'read', 'control_bit', 'target_bit', 'cangle',
-                            'rxangle', 'ryangle', 'rzangle', 'crxangle', 'cryangle', 'crzangle', 'show_values', 'visualization_method']
+            # Gate was applied to existing state
             sim_str = posted_dict['simulator']
-
             q_bit_nr = session['q_bits_nr_cookie']
 
-            for i in range(0, 2**q_bit_nr):
-                dont_look_at.append("betrag"+str(i))
-                dont_look_at.append("phase" + str(i))
-
+            # get info about the gate to be applied
+            # Gate 
             try:
                 control = posted_dict['control']
             except KeyError:
                 control = ""
-            print(sim_str)
+            print(f"Sim String: \n {sim_str:s}\n")
             sim = Simulator(sim_str)
-
-
+            # Involved qubits 
+            target_bits = []
+            control_bits = []
+            for key, val in posted_dict.items():
+                    if key.startswith('target_bit'):
+                        target_bits.append(int(val))
+                    if key.startswith('control_bit'):
+                        control_bits.append(int(val))
+            # Angle parameter for phase gates
+            # Only search the suitable angle for the gate
+            # Currently all forms in modals are submitted each time, hence the angles of the phase gates need a unique key/name...
+            angle_key = f'{control}_angle'
+            if angle_key in posted_dict.keys() and posted_dict[angle_key] != '':
+                angle = int(posted_dict[angle_key])
+            else :
+                angle = 0
+            
+            print(f"\nControl is {control}\nTarget bits are {*target_bits,}\nControl bits are {*control_bits,}\nAngle is {angle}\n")
+            
+            if len(target_bits) == 0:
+                target_bits = None # Apply to all qubits if None are selected
+                # TODO: Give info in gate description that all qubits are affected when none selected
+            
+            # Apply chosen gate
             if control == 'write':
                 try:
                     write_bit = int(posted_dict['write_bit'])
-                    if write_bit >= 2 ** q_bit_nr:
-                        pass
-                    else:
+                    if write_bit < 2 ** q_bit_nr:
                         sim.write(write_bit)
+                    else:
+                        print("Error: Write bit is out of range.")
                 except ValueError:
-                    pass
-
+                    print("Value Error in control==write")
 
             elif control == 'write_complex':
-                betrag_keys = []
-                phase_keys = []
+                # Keys are sorted in ascending order, so appending will guarantee the correct order
+                val_list = []
+                phase_list = []
                 for i in range(0, (2 ** q_bit_nr)):
-                    betrag_keys.append("betrag" + str(i))
-                    phase_keys.append("phase" + str(i))
-
-                betrag_list = [0.0]*(2 ** q_bit_nr)
-                for key in betrag_keys:
-                    key_pos = int(key.replace("betrag", ""))
-
                     try:
-                        betrag_list[key_pos] = float(posted_dict[key])
+                        val_list.append(float(posted_dict[f"val_{i}"]))
+                        phase_list.append(float(posted_dict[f"phase_{i}"]))
                     except ValueError:
-                        pass
-
-                phase_list = [0.0] * (2 ** q_bit_nr)
-                for key in phase_keys:
-                    key_pos = int(key.replace("phase", ""))
-                    try:
-                        phase_list[key_pos] = float(posted_dict[key])
-                    except ValueError:
-                        pass
-
-                if betrag_list != [0.0]*(2 ** q_bit_nr):# and phase_list != [0.0]*(2 ** q_bit_nr):
-                    sim.writeMagnPhase(betrag_list, phase_list)
-
+                        print("Value Error in control==write_complex")
+                print(f"Val List: {val_list}\nPhase List: {phase_list}")
+                if val_list != [0.0]*(2 ** q_bit_nr):
+                    sim.writeMagnPhase(val_list, phase_list)
 
             elif control == 'read':
-                control_bits = []
-                for key in posted_dict.keys():
-                    if key not in dont_look_at:
-                        control_bits.append(int(key))
+                read_output, _ = sim.read(target_bits)
 
-                if control_bits == 0:
-                    control_bits = None
-
-                read_output, result = sim.read(control_bits)
-
-            
             elif control == "check_seperability":
-                pass
-
+                pass # TODO
 
             elif control == 'Set global Phase to 0':
                 sim.setGlobalPhase0()
 
-
             elif control == "qnot" or control == "x":
-                control_bits = []
-                for key in posted_dict.keys():
-                    if key not in dont_look_at:
-                        control_bits.append(int(key))
-                if len(control_bits) > 0:
-                    sim.qnot(control_bits)
+                    sim.qnot(target_bits)
             
             elif control == "y":
-                control_bits = []
-                for key in posted_dict.keys():
-                    if key not in dont_look_at:
-                        control_bits.append(int(key))
-                if len(control_bits) > 0:
-                    sim.y(control_bits)
+                    sim.y(target_bits)
 
             elif control == "z":
-                control_bits = []
-                for key in posted_dict.keys():
-                    if key not in dont_look_at:
-                        control_bits.append(int(key))
-                if len(control_bits) > 0:
-                    sim.z(control_bits)
+                    sim.z(target_bits)
 
             elif control == "rootX":
-                control_bits = []
-                for key in posted_dict.keys():
-                    if key not in dont_look_at:
-                        control_bits.append(int(key))
-                if len(control_bits) > 0:
-                    sim.rootX(control_bits)
+                    sim.rootX(target_bits)
             
             elif control == "rootZ":
-                control_bits = []
-                for key in posted_dict.keys():
-                    if key not in dont_look_at:
-                        control_bits.append(int(key))
-                if len(control_bits) > 0:
-                    sim.rootZ(control_bits)
-
-
+                    sim.rootZ(target_bits)
 
             elif control == "had":
-                control_bits = []
-                for key in posted_dict.keys():
-                    if key not in dont_look_at:
-                        control_bits.append(int(key))
-                if len(control_bits) > 0:
-                    sim.had(control_bits)
+                    sim.had(target_bits)
             
-
             elif control == 'swap':
-                control_bits = []
-                for key in posted_dict.keys():
-                    if key not in dont_look_at:
-                        control_bits.append(int(key))
-                # print("swap", q_bits_2_apply)
-                if len(control_bits) == 2:
-                    sim.swap(control_bits[0], control_bits[1])
-
+                if len(target_bits) == 2:
+                    sim.swap(target_bits[0], target_bits[1])
 
             elif control == "phase":
-                try:
-                    angle = int(posted_dict['angle'])
-                    control_bits = []
-                    for key in posted_dict.keys():
-                        if key not in dont_look_at:
-                            control_bits.append(int(key))
-                    sim.phase(angle=angle, qubit=control_bits)
-                except (ValueError, KeyError):
-                    pass
-       
+                sim.phase(angle, target_bits)
             
             elif control == 'rx':
-                try:
-                    angle = int(posted_dict['rxangle'])
-                    c_bit = int(posted_dict['control_bit'])
-                    if c_bit == 0:
-                        sim.rx(angle, None)
-                    else:
-                        sim.rx(angle, c_bit)
-                except (ValueError, KeyError):
-                    pass
-
+                sim.rx(angle, target_bits)
 
             elif control == 'ry':
-                try:
-                    angle = int(posted_dict['ryangle'])
-                    c_bit = int(posted_dict['control_bit'])
-                    if c_bit == 0:
-                        sim.ry(angle, None)
-                    else:
-                        sim.ry(angle, c_bit)
-                except (ValueError, KeyError):
-                    pass
-
+                sim.ry(angle, target_bits)
 
             elif control == 'rz':
-                try:
-                    angle = int(posted_dict['rzangle'])
-                    c_bit = int(posted_dict['control_bit'])
-                    if c_bit == 0:
-                        sim.rz(angle, None)
-                    else:
-                        sim.rz(angle, c_bit)
-                except (ValueError, KeyError):
-                    pass
+                sim.rz(angle, target_bits)
 
-
+            # Controlled Gates are only applied to one target bit. We assume that web fronted does this somehow correctly.
+            # So list only contains one element.
             elif control == "cnot":
-                try:
-                    target_bit = int(posted_dict['target_bit'])
-                    control_bit = int(posted_dict['control_bit'])
-
-                    if target_bit != control_bit:
-                        sim.cNot(control_bit, target_bit)
-                except (KeyError, ValueError):
-                    pass
-
+                sim.cNot(control_bits, target_bits[0])
 
             elif control == "chad":
-                control_bits = []
-                try:
-                    target_bit = int(posted_dict['target_bit'])
-                except KeyError:
-                    control_bit = -1
-                for key, val in posted_dict.items():
-                    if key.startswith('control_bit'):
-                        control_bits.append(int(val))
-                    # if key not in dont_look_at:
-                    #     control_bits.append(int(key))
-                print("chad ", target_bit, control_bits)
-                if len(control_bits) > 0 and target_bit != -1:
-                    sim.cHad(control_bits, target_bit)
+                if len(control_bits) > 0 and target_bits[0] != -1:
+                    sim.cHad(control_bits, target_bits)
 
-            
             elif control == "cswap":
-                try:
-                    control_bit = int(posted_dict['control_bit'])
-                    control_bits = []
-                    for key in posted_dict.keys():
-                        if key not in dont_look_at:
-                            control_bits.append(int(key))
-                    # print("swap", q_bits_2_apply)
-                    if len(control_bits) == 2 and control_bit not in control_bits:
-                        sim.cSwap([control_bit], control_bits[0], control_bits[1])
-                except KeyError:
-                    pass
-
-
+                if len(control_bits) == 2 and target_bits[0] not in control_bits:
+                    sim.cSwap([target_bits[0]], control_bits[0], control_bits[1])
 
             elif control == 'cphase':
-                try:
-                    target_bit = int(posted_dict['target_bit'])
-                    control_bit = int(posted_dict['control_bit'])
-                    angle = int(posted_dict['cangle'])
-                    sim.cPhase(angle, control_bit, target_bit)
-                except KeyError:
-                    pass
-
+                sim.cPhase(angle, control_bits, target_bits[0])
 
             elif control == 'crx':
-                try:
-                    angle = int(posted_dict['crxangle'])
-                    c_bit = int(posted_dict['control_bit'])
-                    n_bit = int(posted_dict['target_bit'])
-                    sim.cRx(angle, c_bit, n_bit)
-                except (ValueError, KeyError):
-                    pass
-
+                sim.cRx(angle, control_bits, target_bits[0])
 
             elif control == 'cry':
-                try:
-                    angle = int(posted_dict['cryangle'])
-                    c_bit = int(posted_dict['control_bit'])
-                    n_bit = int(posted_dict['target_bit'])
-                    sim.cRy(angle, c_bit, n_bit)
-                except (ValueError, KeyError):
-                    pass
-
+                sim.cRy(angle, control_bits, target_bits[0])
 
             elif control == 'crz':
-                try:
-                    angle = int(posted_dict['crzangle'])
-                    c_bit = int(posted_dict['control_bit'])
-                    n_bit = int(posted_dict['target_bit'])
-                    sim.cRz(angle, c_bit, n_bit)
-                except (ValueError, KeyError):
-                    pass
-
+                sim.cRz(angle, control_bits, target_bits[0])
 
             elif control == 'ccnot':
-                try:
-                    target_bit = int(posted_dict['target_bit'])
-                    # control_bit = int(posted_dict['control_bit'])
-                    control_bits = []
-                    # for i in range(q_bit_nr):
-                    #     control_bits.append()
-                    for key in posted_dict.keys():
-                        if key not in dont_look_at:
-                            control_bits.append(int(key))
-                    if target_bit in control_bits:
-                        control_bits.remove(target_bit)
-                    sim.cNot(control_bits, target_bit)
-                except (ValueError, KeyError):
-                    pass
+                sim.cNot(control_bits, target_bits[0])
+                
+            else: # base case
+                print('Error: Unknown gate name...')
             
-        # Select Visualizer values?
-        try:
-            visName = posted_dict["visualization_method"]
-        except KeyError:
-            visName = 'DCN'
-
-        if visName == 'DCN':
-            vis = DimensionalCircleNotation(sim)
-            print("DimensionalCircleNotation")
-        elif visName == 'CN':
-            vis = CircleNotation(sim)
-            print("CircleNotation")
-        else:
-            raise Exception(f'Wrong value: No such visualizer in views.py: {posted_dict}')
-
+        # Create visualizer
+        vis = Visualizer(sim)
         # Show values?
         try:
             show_values = bool(int(posted_dict["show_values"]))
@@ -368,11 +208,14 @@ def quantuk_generator():
                 binary = "0"*diff+binary
             binary_label_list.append(binary)
 
+        
+        FormattedGateNames = {"x": "Not", "y":"Y", "z":"Z", "rootx":"Root-X", "rootz":"Root-Z", "cnot":"cNot", "cy":"cY", "cz":"cZ", "had":"Had", "chad":"cHad", 
+                              "phase":"Phase", "cphase":"cPhase", "rx":"Rx", "ry":"Ry", "rz":"Rz", "crx":"cRx", "cry":"cRy", "crz":"cRz", "read":"Read", }
+        
         return render_template("quantuk_generator.html", # user=current_user,
                                visualized=vis.exportBase64("png"),
                                visualized_pdf=vis.exportBase64("pdf"),
                                visualized_svg=vis.exportBase64("svg"),
                                q_bits=q_bit_nr, simulator=sim.toJson(), read_output=read_output, show_values=show_values, visualization_method=visName,
-                               binary_label_list=binary_label_list)
+                               binary_label_list=binary_label_list, FormattedGateNames=FormattedGateNames)
 
-                               
