@@ -1,9 +1,9 @@
-<button type="button" class="grid-item" data-toggle="modal" data-target="#cswap"
+<button type="button" class="grid-item" data-toggle="modal" data-target="#cswapmodal"
                         style="background-color: #2c58fe; border-color: #2c58fe">
                     <img src="{{ url_for('static', filename='gate_icons/cswap.svg') }}"
                          width="25"/><span style="margin-left: 10px;">cSwap</span>
 </button>
-<div class="modal fade" id="cswap" data-backdrop="static" data-keyboard="false" tabindex="-1"
+<div class="modal fade" id="cswapmodal" data-backdrop="static" data-keyboard="false" tabindex="-1"
         aria-labelledby="cswapLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -20,9 +20,9 @@
                 <div class="col-sm">
                     {% for nr in range(1, q_bits+1) %}
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" id="i{{nr}}" value="{{nr}}"
-                                name="control__bit_{{nr}}">
-                        <label class="form-check-label" for="i{{nr}}">{{nr}}</label>
+                        <input class="form-check-input" type="radio" id="control_bit_{{nr}}" value="{{nr}}"
+                                name="control_bit_{{nr}}">
+                        <label class="form-check-label" for="control_bit_{{nr}}">{{nr}}</label>
                     </div>
                     {% endfor %}
                 </div>
@@ -30,9 +30,9 @@
                 <div class="col-sm">
                     {% for nr in range(1, q_bits+1) %}
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="{{nr}}"
+                        <input class="form-check-input" type="checkbox" id="target_bit_{{nr}}"
                                 value="{{nr}}" name="target_bit_{{nr}}">
-                        <label class="form-check-label" for="{{nr}}">{{nr}}</label>
+                        <label class="form-check-label" for="target_bit_{{nr}}">{{nr}}</label>
                     </div>
                     {% endfor %}
                 </div>

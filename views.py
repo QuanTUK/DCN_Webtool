@@ -25,7 +25,7 @@ def quantuk_generator():
     else:
         posted_dict = request.form.to_dict()
         print(f"\nPosted dict: {posted_dict}\n")
-
+        # TODO: Store meta informatoins in session cookie
         # Select Visualizer values?
         try:
             visName = posted_dict["visualization_method"]
@@ -167,8 +167,10 @@ def quantuk_generator():
                     sim.cHad(control_bits, target_bits)
 
             elif control == "cswap":
-                if len(control_bits) == 2 and target_bits[0] not in control_bits:
-                    sim.cSwap([target_bits[0]], control_bits[0], control_bits[1])
+                if len(target_bits) == 2 and target_bits[0] not in control_bits and target_bits[1] not in control_bits:
+                    sim.cSwap(control_bits, target_bits[0], target_bits[1])
+                else:
+                    raise Exception("Error: cSwap: Target bits are not unique or one of them is a control bit.")
 
             elif control == 'cphase':
                 sim.cPhase(angle, control_bits, target_bits[0])
