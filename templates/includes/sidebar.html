@@ -34,6 +34,20 @@
             {% endif %}
         </select>
         <br />
+      
+        {% if (visualization_method != None) and visualization_method == 'DCN' %}
+        <label class="form-check-label" for="vis_version">Version</label>
+        <select id="vis_version" name="vis_version" onchange="this.form.submit()">
+            {% if (vis_version != None) and vis_version == 'v1' %}
+            <option value="2">v2</option>
+            <option selected="selected" value="1">v1</option>
+            {% else %}
+            <option selected="selected" value="2">v2</option>
+            <option value="1">v1</option>
+            {% endif %}
+        </select>
+        <br />
+        {% endif %}
         
         <input class="btn btn-primary btn-lg" type="submit" value="Reset/Set Up" name="new_simulation">
 

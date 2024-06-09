@@ -31,6 +31,10 @@ def quantuk_generator():
             visName = posted_dict["visualization_method"]
         except KeyError:
             visName = 'DCN'
+        try:
+            visVersion = posted_dict["vis_version"]
+        except KeyError:
+            visVersion = '2'
 
         # Only import chosen visualizer
         if visName == 'DCN':
@@ -52,7 +56,7 @@ def quantuk_generator():
                     q_bit_nr = 1
 
             session['q_bits_nr_cookie'] = q_bit_nr
-            sim = Simulator(q_bit_nr)
+            sim = Simulator(q_bit_nr, 'version', visVersion) # Version as optional argument
         else:
             # Gate was applied to existing state
             sim_str = posted_dict['simulator']
@@ -219,5 +223,5 @@ def quantuk_generator():
                                visualized_pdf=vis.exportBase64("pdf"),
                                visualized_svg=vis.exportBase64("svg"),
                                q_bits=q_bit_nr, simulator=sim.toJson(), read_output=read_output, show_values=show_values, visualization_method=visName,
-                               binary_label_list=binary_label_list, FormattedGateNames=FormattedGateNames)
+                               vis_version=visVersion, binary_label_list=binary_label_list, FormattedGateNames=FormattedGateNames)
 
