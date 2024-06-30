@@ -38,7 +38,7 @@
         {% if (visualization_method != None) and visualization_method == 'DCN' %}
         <label class="form-check-label" for="vis_version">Version</label>
         <select id="vis_version" name="vis_version" onchange="this.form.submit()">
-            {% if (vis_version != None) and vis_version == 'v1' %}
+            {% if (vis_version != None) and vis_version == 1 %}
             <option value="2">v2</option>
             <option selected="selected" value="1">v1</option>
             {% else %}

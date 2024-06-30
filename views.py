@@ -1,10 +1,10 @@
-#----------------------------------------------------------------------------
-    # Created By: Lars Krupp, kruppl@rptu.de
-    # Modified By: Nikolas Longen, nlongen@rptu.de
-    # Reviewed By: Maximilian Kiefer-Emmanouilidis, maximilian.kiefer@rptu.de
-    # Created: March 2023
-    # Project: DCN QuanTUK
-#----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
+# Created By: Lars Krupp, kruppl@rptu.de
+# Modified By: Nikolas Longen, nlongen@rptu.de
+# Reviewed By: Maximilian Kiefer-Emmanouilidis, maximilian.kiefer@rptu.de
+# Created: March 2023
+# Project: DCN QuanTUK
+# ----------------------------------------------------------------------------
 from flask import Flask, render_template, request, session
 from qc_education_package import Simulator
 
@@ -32,9 +32,9 @@ def quantuk_generator():
         except KeyError:
             visName = 'DCN'
         try:
-            visVersion = posted_dict["vis_version"]
+            visVersion = int(posted_dict["vis_version"])
         except KeyError:
-            visVersion = '2'
+            visVersion = 2
 
         # Only import chosen visualizer
         if visName == 'DCN':
@@ -56,7 +56,7 @@ def quantuk_generator():
                     q_bit_nr = 1
 
             session['q_bits_nr_cookie'] = q_bit_nr
-            sim = Simulator(q_bit_nr, 'version', visVersion) # Version as optional argument
+            sim = Simulator(q_bit_nr)
         else:
             # Gate was applied to existing state
             sim_str = posted_dict['simulator']
@@ -191,19 +191,18 @@ def quantuk_generator():
             elif control == 'ccnot':
                 sim.cNot(control_bits, target_bits[0])
                 
-            else: # base case
+            else:  # base case
                 print('Error: Unknown gate name...')
-            
+           
         # Create visualizer
-        vis = Visualizer(sim)
+        vis = Visualizer(sim, version=visVersion)
         # Show values?
         try:
             show_values = bool(int(posted_dict["show_values"]))
         except KeyError:
             show_values = False
         vis.showMagnPhase(show_values)
-        
-        
+           
         # construct binary label list
         binary_label_list = []
         max_len = len(format(2**q_bit_nr-1, 'b'))
@@ -217,7 +216,7 @@ def quantuk_generator():
         
         FormattedGateNames = {"x": "Not", "y":"Y", "z":"Z", "rootx":"Root-X", "rootz":"Root-Z", "cnot":"cNot", "cy":"cY", "cz":"cZ", "had":"Had", "chad":"cHad", 
                               "phase":"Phase", "cphase":"cPhase", "rx":"Rx", "ry":"Ry", "rz":"Rz", "crx":"cRx", "cry":"cRy", "crz":"cRz", "read":"Read", }
-        
+   
         return render_template("quantuk_generator.html", # user=current_user,
                                visualized=vis.exportBase64("png"),
                                visualized_pdf=vis.exportBase64("pdf"),
