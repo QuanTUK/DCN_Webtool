@@ -165,6 +165,9 @@ def quantuk_generator():
             # So list only contains one element.
             elif control == "cnot":
                 sim.cNot(control_bits, target_bits[0])
+                
+            elif control == "cz":
+                sim.cZ(control_bits, target_bits[0])
 
             elif control == "chad":
                 if len(control_bits) > 0 and target_bits[0] != -1:
