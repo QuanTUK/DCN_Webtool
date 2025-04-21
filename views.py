@@ -63,7 +63,7 @@ def quantuk_generator():
             q_bit_nr = session['q_bits_nr_cookie']
 
             # get info about the gate to be applied
-            # Gate 
+            # Gate
             try:
                 control = posted_dict['control']
             except KeyError:
@@ -119,8 +119,11 @@ def quantuk_generator():
                     sim.writeMagnPhase(val_list, phase_list)
 
             elif control == 'read':
-                read_output, _ = sim.read(target_bits)
-
+                try:
+                    read_output, _ = sim.read(target_bits)
+                except ValueError as e:
+                    read_output = f"Value Error: {e}"
+                    # TODO: Use read_output for feedback
             elif control == "check_seperability":
                 pass # TODO
 
@@ -136,10 +139,10 @@ def quantuk_generator():
             elif control == "z":
                     sim.z(target_bits)
 
-            elif control == "rootX":
+            elif control == "rootx":
                     sim.rootX(target_bits)
             
-            elif control == "rootZ":
+            elif control == "rootz":
                     sim.rootZ(target_bits)
 
             elif control == "had":
@@ -171,7 +174,7 @@ def quantuk_generator():
 
             elif control == "chad":
                 if len(control_bits) > 0 and target_bits[0] != -1:
-                    sim.cHad(control_bits, target_bits)
+                    sim.cHad(control_bits, target_bits[0])
 
             elif control == "cswap":
                 if len(target_bits) == 2 and target_bits[0] not in control_bits and target_bits[1] not in control_bits:
